@@ -5,6 +5,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>BSMLH</title>
 <style>
@@ -17,28 +19,75 @@
   --font:'Rajdhani',sans-serif;--display:'Orbitron',monospace;
   --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px)
 }
-/* ═══ LIGHT THEME ═══ */
+/* ═══ LIGHT THEME (Claude-style) ═══ */
 body.light{
-  --bg:#f0f2f8;--bg2:#e4e8f4;--bg3:#dde2f0;--card:#ffffff;--card2:#f5f7ff;
-  --border:rgba(0,100,200,0.15);--border-gold:rgba(180,80,0,0.2);
-  --text:#0d0d1e;--text2:#44446a;--text3:#9090b0;
+  --bg:#f8f7f4;--bg2:#f2f1ee;--bg3:#eceae5;
+  --card:#ffffff;--card2:#faf9f7;
+  --border:rgba(0,0,0,0.08);--border-gold:rgba(180,80,0,0.18);
+  --text:#1a1916;--text2:#6b6861;--text3:#b5b3ae;
 }
-body.light .g-bg{background-image:linear-gradient(rgba(0,80,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,80,200,0.04) 1px,transparent 1px)}
-body.light .app-hdr,body.light .pg-hdr,body.light .alai-hdr{background:rgba(240,242,248,.97)!important;border-bottom-color:rgba(0,100,200,.15)!important}
-body.light .app-nav{background:rgba(240,242,248,.98)!important;border-top-color:rgba(0,100,200,.15)!important}
-body.light #splash,body.light .scr{background:var(--bg)}
-body.light .hdr-logo{color:#0055cc!important;text-shadow:0 0 15px rgba(0,85,204,.3)!important}
-body.light .nb-lbl{color:var(--text3)}
-body.light .nb.on .nb-lbl{color:#0055cc}
-body.light .welcome-banner{background:linear-gradient(135deg,rgba(0,100,200,.06),rgba(200,100,0,.04))!important}
-body.light .id-card{background:linear-gradient(135deg,#fff,#f5f7ff)!important}
-body.light .feed-item:active{background:rgba(0,100,200,.05)!important}
-body.light .chat-inp{background:rgba(0,100,200,.04)!important;border-color:rgba(0,100,200,.15)!important;color:var(--text)!important}
-body.light .chat-msg.alai .msg-bubble{background:rgba(0,100,200,.07)!important;border-color:rgba(0,100,200,.15)!important}
-body.light .chat-msg.user .msg-bubble{background:rgba(200,100,0,.07)!important;border-color:rgba(200,100,0,.15)!important}
-body.light .modal-box{background:#fff!important}
-body.light #toast{background:rgba(240,242,248,.97)!important;color:var(--text)!important}
-body.light .pg-back{color:#0055cc!important}
+/* Убрать сканлайны, сетку, частицы */
+body.light::after{display:none!important}
+body.light .g-bg{display:none!important}
+body.light #pts{display:none!important}
+/* Тёплый кремово-белый фон как у Claude */
+body.light,
+body.light #splash,
+body.light .scr,
+body.light #app,
+body.light .pg,
+body.light #pg-alai,
+body.light .app-body{background:#f8f7f4!important}
+/* Хедер и навбар */
+body.light .app-hdr{background:rgba(248,247,244,.96)!important;border-bottom:1px solid rgba(0,0,0,.07)!important;box-shadow:0 1px 0 rgba(0,0,0,.05)!important}
+body.light .pg-hdr,body.light .alai-hdr{background:rgba(248,247,244,.96)!important;border-bottom:1px solid rgba(0,0,0,.07)!important;box-shadow:none!important}
+body.light .app-nav{background:rgba(248,247,244,.97)!important;border-top:1px solid rgba(0,0,0,.07)!important;box-shadow:none!important}
+body.light .hdr-logo{color:#c96a1a!important;text-shadow:none!important}
+body.light .pg-back{color:#c96a1a!important;font-size:22px!important}
+body.light .pg-title{color:#1a1916!important}
+/* Nav tabs */
+body.light .nb-lbl{color:#b5b3ae!important}
+body.light .nb.on .nb-lbl{color:#c96a1a!important}
+body.light .hdr-ico{background:rgba(0,0,0,.04)!important;border-color:rgba(0,0,0,.08)!important;color:#6b6861!important}
+/* Карточки */
+body.light .id-card,
+body.light .panel,
+body.light .wcard,
+body.light .vcard,
+body.light .hc,
+body.light .fund-card,
+body.light .qa,
+body.light .map-tile,
+body.light .hub-feat,
+body.light .promo-card,
+body.light .m-group{background:#ffffff!important;border-color:rgba(0,0,0,.08)!important;box-shadow:0 1px 3px rgba(0,0,0,.06)!important}
+body.light .modal-box{background:#ffffff!important;box-shadow:0 8px 30px rgba(0,0,0,.12)!important}
+/* Баннер приветствия */
+body.light .welcome-banner{background:linear-gradient(135deg,#fff8f2,#fdf6ee)!important;border-bottom:1px solid rgba(0,0,0,.06)!important}
+/* Лента */
+body.light .feed-item{border-bottom:1px solid rgba(0,0,0,.06)!important}
+body.light .feed-item:active{background:rgba(0,0,0,.02)!important}
+body.light .sec-hdr{border-bottom:1px solid rgba(0,0,0,.06)!important;color:#b5b3ae!important}
+/* Профиль */
+body.light .prof-top{background:linear-gradient(160deg,#f2f0eb,#f8f7f4)!important}
+body.light .m-item::after{background:rgba(0,0,0,.06)!important}
+body.light .m-item:active{background:rgba(0,0,0,.03)!important}
+body.light .mi-txt{color:#1a1916!important}
+body.light .mi-val,body.light .mi-arrow{color:#b5b3ae!important}
+/* Чат */
+body.light .chat-body{background:#f8f7f4!important}
+body.light .chat-inp{background:#ffffff!important;border:1px solid rgba(0,0,0,.1)!important;color:#1a1916!important}
+body.light .chat-inp::placeholder{color:#b5b3ae!important}
+body.light .chat-send{background:rgba(201,106,26,.1)!important;border-color:rgba(201,106,26,.25)!important;color:#c96a1a!important}
+body.light .chat-msg.alai .msg-bubble{background:#ffffff!important;border:1px solid rgba(0,0,0,.08)!important;color:#1a1916!important;box-shadow:0 1px 3px rgba(0,0,0,.06)!important}
+body.light .chat-msg.user .msg-bubble{background:linear-gradient(135deg,#1a1916,#2d2b27)!important;border:none!important;color:#f8f7f4!important}
+body.light .sug-btn{background:#ffffff!important;border:1px solid rgba(0,0,0,.1)!important;color:#6b6861!important}
+/* Инпуты */
+body.light .fi,body.light select{background:#ffffff!important;border:1px solid rgba(0,0,0,.1)!important;color:#1a1916!important}
+/* Toast */
+body.light #toast{background:#ffffff!important;border:1px solid rgba(0,0,0,.1)!important;color:#1a1916!important;box-shadow:0 4px 16px rgba(0,0,0,.1)!important}
+/* ID стат */
+body.light .id-stat{background:rgba(0,0,0,.03)!important;border:1px solid rgba(0,0,0,.07)!important}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font)}
 /* SCANLINES */
@@ -548,6 +597,9 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 /* SCAN BEAM ANIMATION */
 @keyframes scanBeamAnim{0%{top:30%;opacity:0}5%{opacity:1}50%{top:52%;opacity:1}95%{opacity:1}100%{top:30%;opacity:0}}
 
+/* LEAFLET PULSE */
+@keyframes lfPulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.5);opacity:0}}
+.lf-dot{position:relative}
 /* BLINK */
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:blink 1.5s infinite;margin-right:5px}
@@ -907,15 +959,16 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
     <button class="jtab" id="jt2" onclick="jobTab(2)">+ РАЗМЕСТИТЬ</button>
   </div>
 
-  <!-- КАРТА CANVAS -->
+  <!-- КАРТА LEAFLET -->
 
   <div id="jp0">
-    <div class="map-canvas-wrap">
-      <canvas id="jobsMap" height="200"></canvas>
-      <div class="map-legend">
-        <div class="leg-item"><div class="leg-dot" style="background:var(--neon)"></div>Онлайн</div>
-        <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Занят</div>
-        <div class="leg-item"><div class="leg-dot" style="background:var(--text3)"></div>Офлайн</div>
+    <div class="map-canvas-wrap" style="border-radius:8px;overflow:hidden;position:relative;height:260px;margin-bottom:12px">
+      <div id="jobsMap" style="width:100%;height:100%;z-index:1"></div>
+      <!-- Легенда поверх карты -->
+      <div style="position:absolute;bottom:8px;left:8px;z-index:1000;background:rgba(5,5,15,0.82);border:1px solid rgba(0,242,255,0.2);border-radius:6px;padding:7px 12px;display:flex;gap:12px;backdrop-filter:blur(4px)">
+        <div class="leg-item"><div class="leg-dot" style="background:#00f2ff;box-shadow:0 0 6px #00f2ff"></div><span style="font-size:11px">Онлайн</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#f6851b;box-shadow:0 0 6px #f6851b"></div><span style="font-size:11px">Занят</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#9d00ff;box-shadow:0 0 6px #9d00ff"></div><span style="font-size:11px">Вы</span></div>
       </div>
     </div>
     <!-- ПРОМОКОДЫ -->
@@ -1241,7 +1294,11 @@ function P(id){
 
   document.querySelectorAll('.pg,.modal').forEach(function(e){e.classList.remove('on');});
   var t=el(id);if(t)t.classList.add('on');
-  if(id==='pg-jobs')setTimeout(drawMap,100);
+  if(id==='pg-jobs'){
+    // destroy and reinit map so it gets correct dimensions
+    if(_leafMap){_leafMap.remove();_leafMap=null;_leafMarkers=[];}
+    setTimeout(drawMap, 300);
+  }
   if(id==='pg-pat')setTimeout(updateChipBonusBar,50);
 }
 
@@ -1366,7 +1423,7 @@ function toApp(){
   document.querySelectorAll('.scr').forEach(function(s){s.style.display='none';});
   el('app').className='on';
   el('alai-fab').style.display='flex';
-  loadFeed();upd();drawMap();
+  loadFeed();upd();
   addAlaiMsg('alai','🛡️ Добро пожаловать в BSMLH, '+U.name+'! Я ALAI — ваш персональный ИИ-ассистент. Чем могу помочь?');
 }
 function exitApp(){
@@ -1479,7 +1536,10 @@ function saveMedia(){
 var jobTabIdx=0;
 function jobTab(i){
   jobTabIdx=i;
-  if(i!==0)stopMap();
+  if(i===0){
+    if(_leafMap){_leafMap.remove();_leafMap=null;_leafMarkers=[];}
+    setTimeout(drawMap,200);
+  } else { stopMap(); }
   [0,1,2].forEach(function(j){
     var p=el('jp'+j),b=el('jt'+j);
     if(p)p.style.display=j===i?'block':'none';
@@ -1529,224 +1589,145 @@ var workers=[
   {x:.8,y:.75,name:'Алибек',spec:'Грузчик',rating:4.6,orders:15,status:2},
   {x:.25,y:.5,name:'Жания',spec:'Повар',rating:4.8,orders:44,status:0}
 ];
-// ── MAP ANIMATION LOOP ──
-var _mapRaf = null;
-var _mapPhase = 0;
 
-function stopMap(){ if(_mapRaf){cancelAnimationFrame(_mapRaf);_mapRaf=null;} }
+// ── LEAFLET MAP ──
+var _leafMap = null;
+var _leafMarkers = [];
+var _blinkInterval = null;
+
+var workers=[
+  {x:.15,y:.35,name:'Бауыржан',spec:'Строитель',rating:4.8,orders:47,status:0, lat:43.238, lng:76.889},
+  {x:.45,y:.25,name:'Айгуль',spec:'Уборка',rating:4.9,orders:83,status:0,    lat:43.255, lng:76.915},
+  {x:.7,y:.55,name:'Марат',spec:'Водитель',rating:4.7,orders:126,status:1,   lat:43.221, lng:76.945},
+  {x:.3,y:.7,name:'Нурлан',spec:'Электрик',rating:5.0,orders:32,status:0,    lat:43.210, lng:76.870},
+  {x:.6,y:.3,name:'Дина',spec:'Няня',rating:4.9,orders:61,status:0,          lat:43.262, lng:76.930},
+  {x:.8,y:.75,name:'Алибек',spec:'Грузчик',rating:4.6,orders:15,status:2,    lat:43.200, lng:76.960},
+  {x:.25,y:.5,name:'Жания',spec:'Повар',rating:4.8,orders:44,status:0,        lat:43.248, lng:76.858}
+];
+
+function stopMap(){
+  if(_blinkInterval){clearInterval(_blinkInterval);_blinkInterval=null;}
+}
 
 function drawMap(){
   stopMap();
-  var canvas=el('jobsMap'); if(!canvas)return;
-  var W=canvas.offsetWidth||320, H=240;
-  canvas.width=W; canvas.height=H;
-  _mapPhase=0;
-  (function loop(){
-    _mapPhase += 0.04;
-    renderMap(canvas, W, H, _mapPhase);
-    _mapRaf = requestAnimationFrame(loop);
-  })();
+  var container = document.getElementById('jobsMap');
+  if(!container) return;
 
-  // Workers list
-  if(!el('workers-list').innerHTML){
-    el('workers-list').innerHTML=workers.filter(function(w){return w.status!==2;}).map(function(w){
+  // Init map once
+  if(!_leafMap){
+    _leafMap = L.map('jobsMap', {
+      center: [43.238, 76.905],
+      zoom: 13,
+      zoomControl: false,
+      attributionControl: false
+    });
+
+    // Try multiple tile providers as fallback
+    var tileAdded = false;
+    function addTiles(url, opts){
+      if(tileAdded) return;
+      tileAdded = true;
+      L.tileLayer(url, opts).addTo(_leafMap);
+    }
+
+    // Primary: CartoCDN dark
+    addTiles('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom:19, subdomains:'abcd', crossOrigin:true
+    });
+
+    // Zoom control bottom-right
+    L.control.zoom({position:'bottomright'}).addTo(_leafMap);
+  }
+
+  // Clear old markers
+  _leafMarkers.forEach(function(m){_leafMap.removeLayer(m);});
+  _leafMarkers=[];
+
+  // Add worker markers
+  workers.forEach(function(w){
+    if(w.status===2) return; // skip offline
+    var col = w.status===0?'#00f2ff':'#f6851b';
+    var pulse = w.status===0;
+    var icon = L.divIcon({
+      className:'',
+      html: '<div class="lf-dot" style="'
+        +'width:14px;height:14px;border-radius:50%;background:'+col+';'
+        +'border:2px solid rgba(255,255,255,0.8);'
+        +'box-shadow:0 0 10px '+col+',0 2px 6px rgba(0,0,0,0.5);'
+        +'position:relative;cursor:pointer">'
+        +(pulse?'<div class="lf-pulse" style="'
+          +'position:absolute;inset:-6px;border-radius:50%;'
+          +'border:2px solid '+col+';'
+          +'animation:lfPulse 1.8s ease-out infinite;'
+          +'opacity:0.7"></div>':'')
+        +'</div>'
+        +'<div style="'
+          +'position:absolute;bottom:18px;left:50%;transform:translateX(-50%);'
+          +'background:rgba(5,5,15,0.85);border:1px solid '+col+';'
+          +'color:'+col+';font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;'
+          +'padding:2px 8px;border-radius:4px;white-space:nowrap;'
+          +'letter-spacing:0.5px;pointer-events:none;'
+          +'box-shadow:0 2px 8px rgba(0,0,0,0.5)">'
+          +w.name+'</div>',
+      iconSize:[14,14],
+      iconAnchor:[7,7]
+    });
+    var marker = L.marker([w.lat, w.lng], {icon:icon});
+    marker.bindPopup(
+      '<div style="font-family:Rajdhani,sans-serif;min-width:160px">'
+      +'<div style="font-size:15px;font-weight:700;color:#0d0d1e;margin-bottom:4px">'+w.name+'</div>'
+      +'<div style="font-size:12px;color:#555;margin-bottom:4px">'+w.spec+' · '+(w.status===0?'🟢 Онлайн':'🟠 Занят')+'</div>'
+      +'<div style="font-size:12px;color:#333">★'+w.rating+' · '+w.orders+' заказов</div>'
+      +'<button onclick="T(\'✅ Запрос отправлен '+w.name+'!\')" style="margin-top:8px;width:100%;padding:7px;background:#0d0d1e;color:#00f2ff;border:1px solid #00f2ff;border-radius:4px;font-family:Rajdhani;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer">ПРИНЯТЬ ЗАКАЗ</button>'
+      +'</div>'
+    , {maxWidth:200});
+    marker.addTo(_leafMap);
+    _leafMarkers.push(marker);
+  });
+
+  // User marker (YOU)
+  var youIcon = L.divIcon({
+    className:'',
+    html: '<div style="'
+      +'width:18px;height:18px;border-radius:50%;background:#9d00ff;'
+      +'border:3px solid rgba(255,255,255,0.9);'
+      +'box-shadow:0 0 16px #9d00ff,0 2px 8px rgba(0,0,0,0.6);'
+      +'position:relative">'
+      +'<div style="position:absolute;inset:-8px;border-radius:50%;border:2px solid #9d00ff;animation:lfPulse 1.5s ease-out infinite"></div>'
+      +'<div style="position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(157,0,255,0.4);animation:lfPulse 1.5s ease-out infinite .4s"></div>'
+      +'</div>'
+      +'<div style="position:absolute;bottom:22px;left:50%;transform:translateX(-50%);background:#9d00ff;color:#fff;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;letter-spacing:1px">ВЫ</div>',
+    iconSize:[18,18],
+    iconAnchor:[9,9]
+  });
+  var youMarker = L.marker([43.235, 76.905], {icon:youIcon}).addTo(_leafMap);
+  _leafMarkers.push(youMarker);
+
+  // Workers list below map
+  if(!document.getElementById('workers-list').innerHTML){
+    document.getElementById('workers-list').innerHTML=workers.filter(function(w){return w.status!==2;}).map(function(w){
       var col=w.status===0?'rgba(0,242,255,.12)':'rgba(246,133,27,.12)';
       var tc=w.status===0?'var(--neon)':'var(--gold)';
       var st=w.status===0?'ОНЛАЙН':'ЗАНЯТ';
       var stars='★'.repeat(Math.floor(w.rating))+(w.rating%1>=.5?'½':'');
-      return '<div class="wcard"><div class="wcard-top"><div class="wav" style="background:'+col+'">👷</div><div><div class="w-name">'+w.name+'</div><div class="w-spec" style="color:'+tc+'">'+w.spec.toUpperCase()+' · '+st+'</div><div class="w-rating"><span class="w-stars">'+stars+'</span><span class="w-cnt">'+w.rating+' · '+w.orders+' заказов</span></div></div></div><div class="w-meta">📍 Алматы · ~'+Math.floor(Math.random()*5+1)+' км</div>'+(w.status===0?'<button class="w-accept-btn" onclick="T(\'✅ Запрос отправлен '+w.name+'!\')">ПРИНЯТЬ ЗАКАЗ</button>':'')+'</div>';
+      return '<div class="wcard" onclick="_leafMap&&_leafMap.flyTo(['+w.lat+','+w.lng+'],15,{duration:0.8})" style="cursor:pointer">'
+        +'<div class="wcard-top"><div class="wav" style="background:'+col+'">👷</div>'
+        +'<div><div class="w-name">'+w.name+'</div>'
+        +'<div class="w-spec" style="color:'+tc+'">'+w.spec.toUpperCase()+' · '+st+'</div>'
+        +'<div class="w-rating"><span class="w-stars">'+stars+'</span><span class="w-cnt">'+w.rating+' · '+w.orders+' заказов</span></div>'
+        +'</div></div>'
+        +'<div class="w-meta">📍 Алматы · ~'+Math.floor(Math.random()*5+1)+' км</div>'
+        +(w.status===0?'<button class="w-accept-btn" onclick="event.stopPropagation();T(\'✅ Запрос отправлен '+w.name+'!\')">ПРИНЯТЬ ЗАКАЗ</button>':'')
+        +'</div>';
     }).join('');
   }
+
+  // Force map to redraw (fixes grey tiles on first open)
+  setTimeout(function(){if(_leafMap)_leafMap.invalidateSize();},300);
+  setTimeout(function(){if(_leafMap)_leafMap.invalidateSize();},800);
 }
 
-function renderMap(canvas, W, H, phase){
-  var ctx = canvas.getContext('2d');
-
-  // ── КАРТА ФОНА ──
-  // Земля / блоки районов
-  var bg = ctx.createLinearGradient(0,0,W,H);
-  bg.addColorStop(0,'#c8d4b0');
-  bg.addColorStop(0.4,'#bfcba8');
-  bg.addColorStop(1,'#b8c49e');
-  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-
-  // Парк / зелёная зона (центр)
-  ctx.fillStyle='#a8c87a';
-  roundRectMap(ctx, W*0.35, H*0.3, W*0.28, H*0.25, 6);
-  ctx.fill();
-  // Парк текстура точки
-  ctx.fillStyle='rgba(80,140,40,0.25)';
-  for(var pi=0;pi<18;pi++){
-    ctx.beginPath();
-    ctx.arc(W*0.35+W*0.28*(pi%6)/6+8, H*0.3+H*0.25*(Math.floor(pi/6))/3+8, 3, 0, Math.PI*2);
-    ctx.fill();
-  }
-
-  // Водоём (синий)
-  ctx.fillStyle='#7abcdc';
-  ctx.beginPath();
-  ctx.ellipse(W*0.15, H*0.72, W*0.1, H*0.12, 0.2, 0, Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle='rgba(255,255,255,0.25)';
-  ctx.beginPath();
-  ctx.ellipse(W*0.13, H*0.70, W*0.04, H*0.04, 0.2, 0, Math.PI*2);
-  ctx.fill();
-
-  // Кварталы / блоки зданий
-  var blocks=[
-    [0.02,0.02,0.18,0.28],[0.22,0.02,0.12,0.2],[0.36,0.02,0.14,0.18],[0.52,0.02,0.16,0.22],[0.7,0.02,0.28,0.18],
-    [0.02,0.32,0.14,0.22],[0.18,0.32,0.15,0.22],[0.65,0.32,0.16,0.18],[0.83,0.32,0.15,0.28],
-    [0.02,0.57,0.16,0.2],[0.2,0.58,0.14,0.22],[0.36,0.58,0.14,0.22],[0.52,0.56,0.16,0.24],[0.7,0.56,0.12,0.2],[0.84,0.6,0.14,0.2],
-    [0.06,0.8,0.16,0.18],[0.24,0.8,0.14,0.18],[0.4,0.8,0.16,0.18],[0.58,0.78,0.14,0.2],[0.74,0.78,0.14,0.18]
-  ];
-  blocks.forEach(function(b,i){
-    var shade = i%3===0?'#d8e0c8':i%3===1?'#ccd8b8':'#c8d4b0';
-    ctx.fillStyle=shade;
-    roundRectMap(ctx, b[0]*W, b[1]*H, b[2]*W, b[3]*H, 3);
-    ctx.fill();
-    ctx.strokeStyle='rgba(160,175,140,0.6)';
-    ctx.lineWidth=1;
-    roundRectMap(ctx, b[0]*W, b[1]*H, b[2]*W, b[3]*H, 3);
-    ctx.stroke();
-  });
-
-  // ── ДОРОГИ ──
-  // Главные дороги (светлее/шире)
-  ctx.strokeStyle='#f0ede0'; ctx.lineWidth=8;
-  ctx.lineCap='round';
-  // Горизонтальные
-  [[0,H*0.3,W,H*0.3],[0,H*0.56,W,H*0.56],[0,H*0.78,W,H*0.78]].forEach(function(r){
-    ctx.beginPath();ctx.moveTo(r[0],r[1]);ctx.lineTo(r[2],r[3]);ctx.stroke();
-  });
-  // Вертикальные
-  [[W*0.2,0,W*0.2,H],[W*0.5,0,W*0.5,H],[W*0.82,0,W*0.82,H]].forEach(function(r){
-    ctx.beginPath();ctx.moveTo(r[0],r[1]);ctx.lineTo(r[2],r[3]);ctx.stroke();
-  });
-  // Второстепенные дороги
-  ctx.strokeStyle='#e8e4d4'; ctx.lineWidth=4;
-  [[0,H*0.12,W,H*0.12],[0,H*0.44,W,H*0.44],[W*0.36,0,W*0.36,H],[W*0.65,0,W*0.65,H]].forEach(function(r){
-    ctx.beginPath();ctx.moveTo(r[0],r[1]);ctx.lineTo(r[2],r[3]);ctx.stroke();
-  });
-  // Разметка дорог (пунктир центр)
-  ctx.strokeStyle='rgba(220,210,180,0.5)'; ctx.lineWidth=1.5;
-  ctx.setLineDash([8,10]);
-  [[0,H*0.3,W,H*0.3],[0,H*0.56,W,H*0.56],[W*0.2,0,W*0.2,H],[W*0.5,0,W*0.5,H]].forEach(function(r){
-    ctx.beginPath();ctx.moveTo(r[0],r[1]);ctx.lineTo(r[2],r[3]);ctx.stroke();
-  });
-  ctx.setLineDash([]);
-
-  // ── КАРТА ОВЕРЛЕЙ (полупрозрачный тинт BSMLH) ──
-  ctx.fillStyle='rgba(5,5,20,0.18)';
-  ctx.fillRect(0,0,W,H);
-
-  // ── ИСПОЛНИТЕЛИ С МОРГАЮЩИМИ ТОЧКАМИ ──
-  var statusColors=['#00f2ff','#f6851b','#606070'];
-  workers.forEach(function(w){
-    var px=w.x*W, py=w.y*H;
-    var col=statusColors[w.status];
-
-    if(w.status===0){
-      // Моргающий пульс — 3 кольца с разной фазой
-      for(var ri=0;ri<3;ri++){
-        var rPhase=(phase - ri*0.7);
-        var rScale=(rPhase%2)/2; // 0..1
-        if(rScale<0)rScale+=1;
-        var rOpacity=Math.max(0,(1-rScale)*0.6);
-        var rRadius=9+rScale*22;
-        ctx.beginPath();
-        ctx.arc(px,py,rRadius,0,Math.PI*2);
-        ctx.strokeStyle='rgba(0,242,255,'+rOpacity+')';
-        ctx.lineWidth=1.5;
-        ctx.stroke();
-      }
-      // Мягкий glow под точкой
-      var grd=ctx.createRadialGradient(px,py,0,px,py,14);
-      grd.addColorStop(0,'rgba(0,242,255,0.25)');
-      grd.addColorStop(1,'rgba(0,242,255,0)');
-      ctx.fillStyle=grd;
-      ctx.beginPath();ctx.arc(px,py,14,0,Math.PI*2);ctx.fill();
-    } else if(w.status===1){
-      // Занят — медленное моргание
-      var blink=0.5+0.5*Math.sin(phase*1.5+w.x*10);
-      ctx.beginPath();ctx.arc(px,py,13,0,Math.PI*2);
-      ctx.fillStyle='rgba(246,133,27,'+(0.08+blink*0.12)+')';
-      ctx.fill();
-    }
-
-    // Тень точки
-    ctx.shadowColor=col; ctx.shadowBlur=10;
-    // Основная точка
-    ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);
-    ctx.fillStyle=col; ctx.fill();
-    ctx.shadowBlur=0;
-    // Белый центр
-    ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fill();
-    // Контур
-    ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);
-    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1.5;ctx.stroke();
-
-    // Имя и спец (плашка)
-    ctx.shadowBlur=0;
-    var labelY=py-14;
-    var nameW=ctx.measureText(w.name).width;
-    // Фон плашки
-    ctx.fillStyle='rgba(5,5,15,0.78)';
-    roundRectMap(ctx, px-nameW/2-5, labelY-13, nameW+10, 15, 3);
-    ctx.fill();
-    // Имя
-    ctx.fillStyle=w.status===0?'#00f2ff':w.status===1?'#f6851b':'#8888aa';
-    ctx.font='bold 11px Rajdhani,sans-serif';
-    ctx.textAlign='center';
-    ctx.fillText(w.name, px, labelY);
-  });
-
-  // ── ПОЗИЦИЯ ПОЛЬЗОВАТЕЛЯ (ВЫ) ──
-  var ux=W*0.5, uy=H*0.49;
-  // Пульс
-  for(var ri=0;ri<2;ri++){
-    var rp=(phase*0.8 - ri*1.2)%2; if(rp<0)rp+=2;
-    var rs=rp/2;
-    ctx.beginPath(); ctx.arc(ux,uy,8+rs*20,0,Math.PI*2);
-    ctx.strokeStyle='rgba(157,0,255,'+(0.7*(1-rs))+')';
-    ctx.lineWidth=2; ctx.stroke();
-  }
-  var ugrd=ctx.createRadialGradient(ux,uy,0,ux,uy,14);
-  ugrd.addColorStop(0,'rgba(157,0,255,0.35)');
-  ugrd.addColorStop(1,'rgba(157,0,255,0)');
-  ctx.fillStyle=ugrd; ctx.beginPath();ctx.arc(ux,uy,14,0,Math.PI*2);ctx.fill();
-  // Точка юзера
-  ctx.shadowColor='#9d00ff'; ctx.shadowBlur=12;
-  ctx.beginPath();ctx.arc(ux,uy,9,0,Math.PI*2);
-  ctx.fillStyle='#9d00ff';ctx.fill();
-  ctx.shadowBlur=0;
-  ctx.beginPath();ctx.arc(ux,uy,4,0,Math.PI*2);
-  ctx.fillStyle='#fff';ctx.fill();
-  // Плашка "ВЫ"
-  ctx.fillStyle='rgba(80,0,160,0.85)';
-  roundRectMap(ctx,ux-14,uy-26,28,15,3);ctx.fill();
-  ctx.fillStyle='#fff';ctx.font='bold 11px Rajdhani,sans-serif';
-  ctx.textAlign='center';ctx.fillText('ВЫ',ux,uy-15);
-
-  // ── КОМПАС ──
-  var cx=W-22, cy=22;
-  ctx.fillStyle='rgba(5,5,15,0.7)';
-  ctx.beginPath();ctx.arc(cx,cy,14,0,Math.PI*2);ctx.fill();
-  ctx.strokeStyle='rgba(0,242,255,0.3)';ctx.lineWidth=1;
-  ctx.beginPath();ctx.arc(cx,cy,14,0,Math.PI*2);ctx.stroke();
-  ctx.font='bold 10px Arial'; ctx.textAlign='center';
-  ctx.fillStyle='#ff4444';ctx.fillText('N',cx,cy-4);
-  ctx.fillStyle='rgba(200,200,220,0.6)';ctx.fillText('S',cx,cy+8);
-}
-
-function roundRectMap(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
-  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
-  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);
-  ctx.closePath();
-}
 
 // ── ALAI ──
 function openALAI(){
