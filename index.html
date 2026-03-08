@@ -43,8 +43,8 @@ body{background:var(–dark);color:var(–text);font-family:var(–font-main);he
 /* ═══════════════════════════════
 SPLASH
 ═══════════════════════════════ */
-#splash{position:fixed;inset:0;z-index:9999;background:var(–dark);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:splashOut 0.6s forwards 2.8s}
-@keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+#splash{position:fixed;inset:0;z-index:9999;background:var(–dark);display:flex;flex-direction:column;align-items:center;justify-content:center}
+
 .splash-logo{font-family:var(–font-display);font-size:48px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(–gold),var(–gold2),var(–neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:logoIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards}
 @keyframes logoIn{from{opacity:0;transform:scale(0.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .splash-sub{font-size:9px;color:var(–text2);letter-spacing:3px;text-transform:uppercase;margin-top:12px;animation:fadeUp 0.6s ease forwards 0.4s;opacity:0}
@@ -1013,6 +1013,11 @@ TOAST
 <div id="toast"></div>
 
 <script>
+setTimeout(function(){
+  var s=document.getElementById('splash');
+  if(s)s.style.display='none';
+},2800);
+
 var U={name:'',huid:'',photo:'',qrt:0.01,qrnc:0,invs:[],lv:1,dark:false,hasChip:false};
 var tt=null;
 
