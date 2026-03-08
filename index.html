@@ -108,7 +108,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 #splash.gone{opacity:0;visibility:hidden}
 .sp-logo{font-family:var(--display);font-size:54px;font-weight:900;color:var(--neon);letter-spacing:6px;text-shadow:0 0 40px rgba(0,242,255,.7),0 0 80px rgba(0,242,255,.3);animation:spIn .8s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes spIn{from{opacity:0;transform:scale(.4) translateY(20px)}to{opacity:1;transform:scale(1)}}
-.sp-sub{font-size:11px;color:var(--text2);letter-spacing:4px;margin-top:12px;text-transform:uppercase;animation:fadeUp .5s ease both .4s;opacity:0}
+.sp-sub{font-size:11px;color:var(--text2);letter-spacing:4px;margin-top:12px;text-transform:uppercase;animation:fadeUp .5s ease both .4s;opacity:0;text-align:center;width:100%}
 .sp-track{width:200px;height:2px;background:rgba(0,242,255,.1);border-radius:2px;margin-top:28px;overflow:hidden;animation:fadeUp .4s ease both .6s;opacity:0}
 .sp-fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--gold));border-radius:2px;width:0;animation:spLoad 2.2s ease both .8s;box-shadow:0 0 12px var(--neon)}
 @keyframes spLoad{to{width:100%}}
@@ -651,7 +651,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
 <div id="splash">
   <div class="sp-logo">BSMLH</div>
-  <div class="sp-sub">Biometric Security Multifunctional Ledger for Humanity</div>
+  <div class="sp-sub" style="text-align:center;width:100%;display:block">Biometric Security Multifunctional Ledger for Humanity</div>
   <div class="sp-track"><div class="sp-fill"></div></div>
   <div class="sp-status" id="sp-st">INITIALIZING CORE...</div>
 </div>
@@ -668,10 +668,9 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
     </div>
   </div>
   <div class="steps"><div class="step on"></div><div class="step"></div><div class="step"></div></div>
-  <div class="onb-tag">STEP 01 // IDENTITY</div>
-  <div class="onb-h" id="onb-h1">ВВЕДИТЕ ИМЯ</div>
-  <div class="onb-p" style="font-family:'Orbitron',monospace;font-size:15px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#00f2ff,#9d00ff,#f6851b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;margin-top:6px">ЗАЩИТА НОВОГО ПОКОЛЕНИЯ</div>
-  <input class="inp" id="inp-name" placeholder="Ваше имя..." autocomplete="off">
+  <div class="onb-tag">STEP 01 // РЕГИСТРАЦИЯ</div>
+  <div class="onb-h" id="onb-h1">ВАШЕ ИМЯ И ФАМИЛИЯ</div>
+  <input class="inp" id="inp-name" placeholder="Имя и Фамилия..." autocomplete="off">
   <button class="btn" onclick="step1Next()">ПРОДОЛЖИТЬ ›</button>
 </div>
 
@@ -708,7 +707,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
   <!-- Bottom controls -->
   <div style="position:relative;z-index:10;width:100%;padding:20px 24px max(36px,env(safe-area-inset-bottom,20px));display:flex;flex-direction:column;align-items:center;gap:14px;background:linear-gradient(transparent,rgba(0,0,0,0.88) 40%)">
-    <button onclick="takePhoto()" style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,0.95);border:4px solid #00f2ff;box-shadow:0 0 24px rgba(0,242,255,0.6),0 0 48px rgba(0,242,255,0.2);font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center">📸</button>
+    <button onclick="takePhoto()" style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,0.95);border:4px solid #00f2ff;box-shadow:0 0 24px rgba(0,242,255,0.6),0 0 48px rgba(0,242,255,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="28" height="24" viewBox="0 0 28 24" fill="none"><rect x="1" y="5" width="26" height="17" rx="3" stroke="#050508" stroke-width="2"/><circle cx="14" cy="14" r="5" stroke="#050508" stroke-width="2"/><path d="M9 5l2-4h6l2 4" stroke="#050508" stroke-width="2" stroke-linejoin="round"/></svg></button>
     <button onclick="skipCam()" style="background:transparent;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;padding:8px;font-family:'Rajdhani',sans-serif;letter-spacing:1px">Пропустить →</button>
   </div>
 </div>
@@ -936,6 +935,20 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
       <span class="prof-chip g">🏆 <span id="prof-qrnc">0</span> QRNC</span>
     </div>
   </div>
+  <!-- BSMLH CARD preview in profile -->
+  <div onclick="P('pg-card')" style="margin:0 16px 14px;cursor:pointer">
+    <div class="bcard" style="margin:0;transform:scale(1);transition:transform .2s" onmousedown="this.style.transform='scale(.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'">
+      <div class="bc-shine"></div>
+      <span class="bc-chip">🛡️</span>
+      <div class="bc-name" id="c-name2">ПОЛЬЗОВАТЕЛЬ</div>
+      <div class="bc-num">•••• ••••••<span id="c-last4-2">----</span></div>
+      <div class="bc-bot">
+        <div><div class="bc-lbl">VALID THRU</div><div class="bc-val" id="c-exp2">--/--</div></div>
+        <div style="text-align:right"><div class="bc-lbl">NETWORK</div><div class="bc-net">BSMLH</div></div>
+      </div>
+      <div class="bc-foot">BIOMETRIC SECURITY MULTIFUNCTIONAL LEDGER FOR HUMANITY</div>
+    </div>
+  </div>
   <div class="m-group">
     <div class="m-item" onclick="P('pg-svc')"><span class="mi-ico">💳</span><span class="mi-txt">Services</span><span class="mi-arrow">›</span></div>
     <div class="m-item" onclick="P('pg-fav')"><span class="mi-ico">📦</span><span class="mi-txt">Favorites</span><span class="mi-arrow">›</span></div>
@@ -948,24 +961,24 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div style="height:16px"></div>
 </div>
 
-<div id="pg-svc" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-svc')">←</div><span class="pg-title">SERVICES</span></div><div class="pg-body"><div class="panel"><h3>ПЛАТЁЖНЫЕ СИСТЕМЫ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div></div></div>
+<div id="pg-svc" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-svc')">НАЗАД</div><span class="pg-title">SERVICES</span></div><div class="pg-body"><div class="panel"><h3>ПЛАТЁЖНЫЕ СИСТЕМЫ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div></div></div>
 
-<div id="pg-fav" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fav')">←</div><span class="pg-title">FAVORITES</span></div><div class="pg-body"><div style="text-align:center;padding:48px 0"><div style="font-size:44px;margin-bottom:12px">📦</div><div style="font-family:var(--display);font-size:12px;color:var(--text3);letter-spacing:2px">ПУСТО</div></div></div></div>
+<div id="pg-fav" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fav')">НАЗАД</div><span class="pg-title">FAVORITES</span></div><div class="pg-body"><div style="text-align:center;padding:48px 0"><div style="font-size:44px;margin-bottom:12px">📦</div><div style="font-family:var(--display);font-size:12px;color:var(--text3);letter-spacing:2px">ПУСТО</div></div></div></div>
 
-<div id="pg-card" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-card')">←</div><span class="pg-title">CARDS & OFFERS</span></div><div class="pg-body">
+<div id="pg-card" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-card')">НАЗАД</div><span class="pg-title">CARDS & OFFERS</span></div><div class="pg-body">
   <div class="bcard"><div class="bc-shine"></div><span class="bc-chip">🛡️</span><div class="bc-name" id="c-name">ПОЛЬЗОВАТЕЛЬ</div><div class="bc-num">•••• ••••••<span id="c-last4">7711</span></div><div class="bc-bot"><div><div class="bc-lbl">VALID THRU</div><div class="bc-val" id="c-exp">11/27</div></div><div style="text-align:right"><div class="bc-lbl">NETWORK</div><div class="bc-net">BSMLH</div></div></div><div class="bc-foot">BIOMETRIC SECURITY MULTIFUNCTIONAL LEDGER FOR HUMANITY</div></div>
   <div class="panel" style="cursor:pointer" onclick="T('🎁 Активировано! +10 QRT')"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:26px">🎁</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Бонус за первое изобретение</div><div style="font-size:12px;color:var(--text2);margin-top:2px">+10 QRT при фиксации L2</div></div></div></div>
   <div class="panel" style="cursor:pointer" onclick="T('🤝 Ссылка скопирована')"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:26px">🤝</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Пригласи друга</div><div style="font-size:12px;color:var(--text2);margin-top:2px">+3 QRT за реферала</div></div></div></div>
 </div></div>
 
-<div id="pg-stk" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-stk')">←</div><span class="pg-title">STICKERS</span></div><div class="pg-body">
+<div id="pg-stk" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-stk')">НАЗАД</div><span class="pg-title">STICKERS</span></div><div class="pg-body">
   <div class="stk-sec">// BSMLH ORIGINAL</div>
   <div class="stk-grid"><div onclick="T('🛡️')">🛡️</div><div onclick="T('💡')">💡</div><div onclick="T('🌱')">🌱</div><div onclick="T('🔐')">🔐</div><div onclick="T('⚡')">⚡</div><div onclick="T('🌍')">🌍</div><div onclick="T('🏆')">🏆</div><div onclick="T('🤝')">🤝</div></div>
   <div class="stk-sec">// УРОВНИ РЕПУТАЦИИ</div>
   <div class="stk-grid"><div onclick="T('⚪ Новый')">⚪</div><div onclick="T('🟢 Активный')">🟢</div><div onclick="T('🔵 Надёжный')">🔵</div><div onclick="T('🟣 Доверенный')">🟣</div><div onclick="T('⭐ Легенда')">⭐</div><div onclick="T('👑 Основатель')">👑</div><div onclick="T('🧬 Верифицирован')">🧬</div><div onclick="T('💎 VIP')">💎</div></div>
 </div></div>
 
-<div id="pg-set" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-set')">←</div><span class="pg-title">SETTINGS</span></div><div class="pg-body" style="padding:0">
+<div id="pg-set" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-set')">НАЗАД</div><span class="pg-title">SETTINGS</span></div><div class="pg-body" style="padding:0">
   <div class="set-head"><div class="set-av"><img id="set-av" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='25' fill='%2316161f'/%3E%3Ctext x='25' y='32' text-anchor='middle' font-size='20' fill='%23303048'%3E👤%3C/text%3E%3C/svg%3E"></div><div><div style="font-family:var(--display);font-size:13px;color:var(--text);letter-spacing:1px" id="set-name">ПОЛЬЗОВАТЕЛЬ</div><div style="font-family:var(--display);font-size:8px;color:var(--text3);margin-top:3px;letter-spacing:1.5px" id="set-huid">···</div></div></div>
   <div style="padding:12px 16px">
   <div class="m-group">
@@ -976,21 +989,13 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
       <span class="mi-arrow">›</span>
     </div>
   </div>
-  <div class="m-group" style="padding:14px 16px">
-    <div style="font-size:11px;color:var(--text3);letter-spacing:2px;font-family:var(--display);margin-bottom:8px">🤖 ALAI API КЛЮЧ</div>
-    <div style="display:flex;gap:8px">
-      <input id="ai-key-inp" type="password" placeholder="sk-ant-api03-..." style="flex:1;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-family:monospace;font-size:12px;outline:none">
-      <button onclick="saveAIKey()" style="background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.25);color:var(--neon);border-radius:6px;padding:9px 16px;font-family:var(--display);font-size:11px;cursor:pointer;white-space:nowrap">СОХРАНИТЬ</button>
-    </div>
-    <div id="ai-key-status" style="font-size:11px;color:var(--text3);margin-top:6px"><span id="ai-key-st">Ключ не установлен</span></div>
-    <div style="font-size:10px;color:var(--text3);margin-top:4px">Получить ключ: <a href="https://console.anthropic.com" target="_blank" style="color:var(--neon)">console.anthropic.com</a></div>
-  </div>
-  <div class="m-group"><div class="m-item" onclick="P('pg-chip')"><span class="mi-ico">🛡️</span><span class="mi-txt">BSMLH CHIP</span><span class="mi-val" id="chip-set-val">Не активен</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔔</span><span class="mi-txt">Уведомления</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🌐</span><span class="mi-txt">Язык</span><span class="mi-val">Русский</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔒</span><span class="mi-txt">Приватность</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">ℹ️</span><span class="mi-txt">О приложении</span><span class="mi-val" style="font-family:var(--display)">v13.0</span><span class="mi-arrow">›</span></div></div>
+
+  <div class="m-group"><div class="m-item" onclick="P('pg-chip')"><span class="mi-ico">🛡️</span><span class="mi-txt">BSMLH CHIP</span><span class="mi-val" id="chip-set-val">Не активен</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔔</span><span class="mi-txt">Уведомления</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🌐</span><span class="mi-txt">Язык</span><span class="mi-val">Русский</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔒</span><span class="mi-txt">Приватность</span><span class="mi-arrow">›</span></div><div class="m-item" onclick="P('pg-about')"><span class="mi-ico">ℹ️</span><span class="mi-txt">О приложении</span><span class="mi-val" style="font-family:var(--display)">v13.0</span><span class="mi-arrow">›</span></div></div>
   <div style="padding:14px 0"><button onclick="exitApp()" style="width:100%;padding:14px;border-radius:3px;border:1px solid rgba(255,51,102,.25);background:rgba(255,51,102,.06);color:var(--red);font-weight:700;font-size:12px;cursor:pointer;font-family:var(--display);letter-spacing:2px">ВЫЙТИ</button></div>
   </div>
 </div></div>
 
-<div id="pg-chip" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-chip')">←</div><span class="pg-title">BSMLH CHIP</span></div><div class="pg-body">
+<div id="pg-chip" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-chip')">НАЗАД</div><span class="pg-title">BSMLH CHIP</span></div><div class="pg-body">
   <div style="background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border-gold);border-radius:4px;padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:14px">
     <div style="font-size:40px">🛡️</div>
     <div><div style="font-family:var(--display);font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:4px">BSMLH CHIP</div><div style="font-size:13px;color:var(--text2)" id="chip-info">Статус: ❌ Не активен</div></div>
@@ -1004,7 +1009,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div class="panel" style="margin-top:12px"><div style="font-size:12px;color:var(--text2);line-height:1.7">BSMLH CHIP — физический NFC-чип нового поколения. Верифицирует вашу биометрическую личность и открывает полный доступ к платформе и смарт-контрактам.</div></div>
 </div></div>
 
-<div id="pg-pat" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-pat')">←</div><span class="pg-title">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div><div class="pg-body">
+<div id="pg-pat" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-pat')">НАЗАД</div><span class="pg-title">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div><div class="pg-body">
   <div id="inv-list"></div>
   <div class="panel" style="cursor:pointer;display:flex;align-items:center;gap:13px" onclick="P('pg-media')">
     <div style="font-size:28px">🎬</div>
@@ -1025,7 +1030,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   </div>
 </div></div>
 
-<div id="pg-media" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-media')">←</div><span class="pg-title">МЕДИАФИКСАЦИЯ</span></div><div class="pg-body">
+<div id="pg-media" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-media')">НАЗАД</div><span class="pg-title">МЕДИАФИКСАЦИЯ</span></div><div class="pg-body">
   <div class="panel"><div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.7">Загрузите файл — система создаст SHA-256 хэш и зафиксирует дату. Цифровое доказательство вашего авторства.</div>
     <div class="drop-zone" id="drop-z" onclick="document.getElementById('media-inp').click()">
       <div style="font-size:38px;margin-bottom:8px">📁</div>
@@ -1045,14 +1050,14 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div id="media-list"></div>
 </div></div>
 
-<div id="pg-wal" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-wal')">←</div><span class="pg-title">QRT КОШЕЛЁК</span></div><div class="pg-body">
+<div id="pg-wal" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-wal')">НАЗАД</div><span class="pg-title">QRT КОШЕЛЁК</span></div><div class="pg-body">
   <div class="qrt-hero"><div class="qh-lbl">QRT БАЛАНС</div><div class="qh-amt" id="w-qrt">0.01</div><div class="qh-name">QUANTUM REWARD TOKEN</div></div>
   <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><div style="font-family:var(--display);font-size:9px;color:var(--text3);letter-spacing:2px">QRNC РЕПУТАЦИЯ</div><div style="font-family:var(--display);font-size:15px;font-weight:900;color:var(--neon)" id="w-qrnc">0</div></div><div class="bar-wrap"><div class="bar" id="qrnc-bar" style="width:0%"></div></div></div>
   <div class="panel"><h3>ПОПОЛНИТЬ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div>
   <div class="panel"><h3>ИСТОРИЯ</h3><div id="hist-list"><div class="hist-row"><span>✅ Аккаунт создан</span><span style="color:var(--green);font-family:var(--display);font-size:10px">+0.01 QRT</span></div></div></div>
 </div></div>
 
-<div id="pg-fund" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fund')">←</div><span class="pg-title">HUMANITY FUND</span></div><div class="pg-body">
+<div id="pg-fund" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fund')">НАЗАД</div><span class="pg-title">HUMANITY FUND</span></div><div class="pg-body">
   <div class="fund-hero"><div class="fh-ico">🌍</div><div class="fh-title">HUMANITY FUND</div><div class="fh-sub">Твой вклад в будущее человечества</div></div>
   <div class="fund-card" onclick="doFund('🌱 Посадил дерево! +5 QRNC')"><div class="f-ico">🌱</div><div><div class="f-name">Посадить дерево</div><div class="f-desc">Озеленение планеты</div><div class="f-rew">+5 QRNC</div></div></div>
   <div class="fund-card" onclick="doFund('🤝 Сделал добро! +3 QRNC')"><div class="f-ico">🤝</div><div><div class="f-name">Сделать добро</div><div class="f-desc">Помочь ближнему</div><div class="f-rew">+3 QRNC</div></div></div>
@@ -1068,7 +1073,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
 <!-- БИРЖА ТРУДА -->
 
-<div id="pg-jobs" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-jobs')">←</div><span class="pg-title">БИРЖА ТРУДА</span></div><div class="pg-body">
+<div id="pg-jobs" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-jobs')">НАЗАД</div><span class="pg-title">БИРЖА ТРУДА</span></div><div class="pg-body">
   <div class="jtabs">
     <button class="jtab on" id="jt0" onclick="jobTab(0)">🔍 ИСПОЛНИТЕЛИ</button>
     <button class="jtab" id="jt1" onclick="jobTab(1)">📋 ВАКАНСИИ</button>
@@ -1383,6 +1388,63 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   </div>
 </div>
 
+
+<!-- ABOUT PAGE -->
+<div id="pg-about" class="pg">
+  <div class="pg-hdr">
+    <div class="pg-back" onclick="C('pg-about')">НАЗАД</div>
+    <span class="pg-title">О ПРИЛОЖЕНИИ</span>
+  </div>
+  <div class="pg-body">
+    <div style="text-align:center;padding:28px 20px 22px;background:linear-gradient(135deg,rgba(0,242,255,.04),rgba(157,0,255,.04));border-bottom:1px solid var(--border);margin-bottom:18px">
+      <div style="font-family:'Orbitron',monospace;font-size:40px;font-weight:900;color:var(--gold);letter-spacing:8px;text-shadow:0 0 30px rgba(246,133,27,.4);margin-bottom:4px">BSMLH</div>
+      <div style="font-family:'Orbitron',monospace;font-size:9px;color:var(--text3);letter-spacing:3px;margin-bottom:14px">ВЕРСИЯ 13.0 &middot; 2026</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(13,255,140,.08);border:1px solid rgba(13,255,140,.2);border-radius:20px;padding:6px 16px">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:inline-block"></span>
+        <span style="font-family:'Orbitron',monospace;font-size:9px;color:var(--green);letter-spacing:2px">СИСТЕМА АКТИВНА</span>
+      </div>
+    </div>
+    <div style="padding:0 16px 20px">
+      <div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--neon);letter-spacing:2px;margin-bottom:10px">// ЧТО ТАКОЕ BSMLH</div>
+      <div style="font-size:14px;color:var(--text2);line-height:1.9;margin-bottom:18px"><b style="color:var(--text)">BSMLH</b> — самое защищённое приложение нового поколения для каждого человека на планете. Платформа объединяет биометрию, NFC-верификацию и блокчейн-репутацию в единой экосистеме безопасности цифровой личности.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+        <div style="background:var(--card);border:1px solid rgba(0,242,255,.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:24px;flex-shrink:0">🛡️</span>
+          <div><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--neon);letter-spacing:1px;margin-bottom:4px">БИОМЕТРИЧЕСКАЯ ЗАЩИТА</div><div style="font-size:13px;color:var(--text2);line-height:1.7">Уникальный HUID-идентификатор, привязанный к биометрии и NFC-чипу. Невозможно подделать личность.</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(246,133,27,.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:24px;flex-shrink:0">📜</span>
+          <div><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:4px">ПАТЕНТНАЯ МАСТЕРСКАЯ</div><div style="font-size:13px;color:var(--text2);line-height:1.7">SHA-256 фиксация изобретений с официальным сертификатом. Три уровня защиты: L1, L2, L3.</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(13,255,140,.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:24px;flex-shrink:0">💰</span>
+          <div><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--green);letter-spacing:1px;margin-bottom:4px">QRT / QRNC ТОКЕНЫ</div><div style="font-size:13px;color:var(--text2);line-height:1.7">Зарабатывай токены за реальные дела и изобретения. Репутация, которую невозможно купить.</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(157,0,255,.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:24px;flex-shrink:0">💼</span>
+          <div><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--purple);letter-spacing:1px;margin-bottom:4px">БИРЖА ТРУДА</div><div style="font-size:13px;color:var(--text2);line-height:1.7">Uber для любого труда. Все участники верифицированы биометрически — полное доверие.</div></div>
+        </div>
+        <div style="background:var(--card);border:1px solid rgba(0,242,255,.15);border-radius:10px;padding:14px;display:flex;gap:12px;align-items:flex-start">
+          <span style="font-size:24px;flex-shrink:0">🤖</span>
+          <div><div style="font-family:'Orbitron',monospace;font-size:11px;color:var(--neon);letter-spacing:1px;margin-bottom:4px">ALAI — ИИ АГЕНТ</div><div style="font-size:13px;color:var(--text2);line-height:1.7">Персональный искусственный интеллект — помогает с патентами, работой, токенами и всеми вопросами платформы.</div></div>
+        </div>
+      </div>
+      <!-- Copyright -->
+      <div style="background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border-gold);border-radius:10px;padding:20px;text-align:center;margin-bottom:14px">
+        <div style="font-family:'Orbitron',monospace;font-size:16px;color:var(--gold);letter-spacing:3px;margin-bottom:8px">ALAI CORPORATION</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.9;margin-bottom:10px">Все права на платформу BSMLH принадлежат компании<br><b style="color:var(--text)">ALAI Corporation</b>.<br>Несанкционированное копирование запрещено.</div>
+        <div style="height:1px;background:var(--border);margin-bottom:10px"></div>
+        <div style="font-family:'Orbitron',monospace;font-size:8px;color:var(--text3);letter-spacing:2px">&copy; 2026 ALAI CORPORATION &middot; ALL RIGHTS RESERVED</div>
+        <div style="font-family:'Orbitron',monospace;font-size:8px;color:var(--text3);letter-spacing:2px;margin-top:3px">BSMLH&reg; &mdash; ЗАРЕГИСТРИРОВАННЫЙ ТОВАРНЫЙ ЗНАК</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div onclick="T('🌐 bsmlh.io — скоро')" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer"><div style="font-size:22px;margin-bottom:4px">🌐</div><div style="font-size:11px;color:var(--text2)">bsmlh.io</div></div>
+        <div onclick="T('📧 info@alai.corp')" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer"><div style="font-size:22px;margin-bottom:4px">📧</div><div style="font-size:11px;color:var(--text2)">Контакты</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -1484,14 +1546,14 @@ history.pushState(null,'',location.href);
 // ── LANG ──
 function toggleLang(e){if(e)e.stopPropagation();el('l-dd').classList.toggle('open');}
 function setLang(l){
-  set('onb-h1',l==='RU'?'ВВЕДИТЕ ИМЯ':l==='EN'?'ENTER NAME':'АТЫҢЫЗДЫ ЕНГІЗІҢІЗ');
+  set('onb-h1',l==='RU'?'ВАШЕ ИМЯ И ФАМИЛИЯ':l==='EN'?'FULL NAME':'АТЫ-ЖӨНІҢІЗ');
   el('l-dd').classList.remove('open');
 }
 
 // ── ONBOARDING ──
 function step1Next(){
   var n=el('inp-name').value.trim();
-  if(!n){T('⚠️ ВВЕДИТЕ ИМЯ');return;}
+  if(!n){T('⚠️ Введите имя и фамилию');return;}
   U.name=n;
   var s=el('s1');s.classList.remove('on');s.classList.add('out');
   setTimeout(function(){s.classList.remove('out');},400);
@@ -1711,11 +1773,11 @@ function toApp(){
   var chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',uid='';
   for(var i=0;i<16;i++)uid+=chars[Math.floor(Math.random()*chars.length)];
   U.huid='BSMLH-2026-'+uid;
-  ['id-name','p-name','set-name','c-name','prof-name'].forEach(function(id){set(id,U.name.toUpperCase());});
+  ['id-name','p-name','set-name','c-name','c-name2','prof-name'].forEach(function(id){set(id,U.name.toUpperCase());});
   ['id-huid','p-huid','set-huid','qr-id','prof-huid'].forEach(function(id){set(id,U.huid);});
   var last4=Math.floor(1000+Math.random()*9000).toString();
   var now=new Date(),exp=((now.getMonth()+1).toString().padStart(2,'0'))+'/'+(now.getFullYear()+2).toString().substr(2);
-  set('c-last4',last4);set('c-exp',exp);
+  set('c-last4',last4);set('c-exp',exp);set('c-last4-2',last4);set('c-exp2',exp);
   var qd=encodeURIComponent('BSMLH:'+U.huid+':'+U.name);
   var qi=el('qr-img');if(qi)qi.src='https://api.qrserver.com/v1/create-qr-code/?size=170x170&data='+qd+'&bgcolor=111118&color=00f2ff';
   if(U.photo){
@@ -2663,9 +2725,12 @@ function fixInv(t,n){
   crypto.subtle.digest('SHA-256',enc.encode(dataStr)).then(function(buf){
     inv.hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
     U.invs.unshift(inv);
-    U.qrt=Math.round((U.qrt+0.01)*100)/100;
+    var qBonus={1:1,2:2,3:3}[selLv]||1;
+    var rBonus={1:0.1,2:0.2,3:0.3}[selLv]||0.1;
+    U.qrt=Math.round((U.qrt+qBonus)*100)/100;
+    U.qrnc=Math.round((U.qrnc+rBonus)*100)/100;
     el('inv-t').value='';el('inv-d').value='';el('inv-niche').value='';
-    upd();renderInvs();T('✅ ЗАФИКСИРОВАНО! Открываю сертификат...');
+    upd();renderInvs();T('\u2705 \u0417\u0410\u0424\u0418\u041a\u0421\u0418\u0420\u041e\u0412\u0410\u041d\u041e! +'+qBonus+' QRT +'+rBonus+' QRNC');
     setTimeout(function(){openCert(inv);},800);
   });
 }
