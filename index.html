@@ -8,6 +8,7 @@
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -150,6 +151,10 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .nfc-st{font-family:var(--display);font-size:12px;color:var(--neon);text-align:center;letter-spacing:2px;height:16px;text-shadow:0 0 10px rgba(0,242,255,.7)}
 /* SMS */
 .sms-box{width:100%;max-width:320px;background:rgba(0,242,255,.03);border:1px solid rgba(0,242,255,.12);border-radius:3px;padding:26px 20px;clip-path:polygon(12px 0%,100% 0%,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px)}
+.code-box{width:44px;height:54px;border-radius:8px;background:rgba(0,242,255,.05);border:2px solid rgba(0,242,255,.2);color:var(--text);font-family:var(--display);font-size:24px;font-weight:700;text-align:center;outline:none;transition:border-color .2s;caret-color:transparent}
+.code-box:focus{border-color:var(--neon);box-shadow:0 0 12px rgba(0,242,255,.2)}
+.code-box.filled{border-color:rgba(13,255,140,.5);background:rgba(13,255,140,.05)}
+@keyframes spin{to{transform:rotate(360deg)}}
 .sms-box h3{font-family:var(--display);font-size:15px;color:var(--text);text-align:center;margin-bottom:6px;letter-spacing:2px}
 .sms-box p{font-size:15px;color:var(--text2);text-align:center;margin-bottom:20px}
 .demo-hint{font-size:12px;color:var(--text3);text-align:center;margin-top:10px;letter-spacing:1px}
@@ -174,10 +179,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .app-body::-webkit-scrollbar{display:none}
 .app-nav{display:flex;justify-content:space-around;align-items:center;padding:8px 0;padding-bottom:max(14px,var(--safe-bot));background:rgba(5,5,8,.98);border-top:1px solid var(--border);flex-shrink:0}
 .nb{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 14px;transition:all .2s;min-width:58px}
-.nb-ico{font-size:21px;transition:all .25s;filter:grayscale(1) opacity(.4)}
-.nb-lbl{font-family:var(--display);font-size:9px;letter-spacing:2px;color:var(--text3);transition:color .2s}
-.nb.on .nb-ico{filter:none;transform:scale(1.12)}
-.nb.on .nb-lbl{color:var(--neon)}
+.nb{font-family:var(--display);font-size:11px;letter-spacing:2px;color:var(--text3);cursor:pointer;padding:14px 6px 10px;transition:color .2s;user-select:none;flex:1;text-align:center}
+.nb.on{color:var(--neon);text-shadow:0 0 10px rgba(0,242,255,.4)}
+.nb:active{opacity:.7}
 /* TABS */
 .tv{display:none}
 .tv.on{display:block;animation:tvIn .3s ease}
@@ -725,24 +729,72 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <button class="btn-ghost" onclick="showSMS()">Войти без чипа →</button>
 </div>
 
-<!-- STEP 4: SMS -->
-
+<!-- STEP 4: SMS VERIFICATION -->
 <div id="s4" class="scr">
-  <div class="onb-tag">VERIFICATION</div>
-  <div class="onb-h">ПОДТВЕРЖДЕНИЕ</div>
-  <div class="sms-box">
-    <div id="ss1">
-      <h3>ВВЕДИТЕ НОМЕР</h3>
-      <p>Отправим код подтверждения</p>
-      <input type="tel" id="sms-phone" class="inp" placeholder="+7 (___) ___-__-__" style="max-width:100%;margin-bottom:10px">
-      <button class="btn" style="max-width:100%" onclick="sendSMS()">ПОЛУЧИТЬ КОД</button>
+  <div class="steps"><div class="step done"></div><div class="step done"></div><div class="step done"></div><div class="step on"></div></div>
+  <div class="onb-tag">STEP 04 // VERIFICATION</div>
+
+  <!-- PHONE INPUT STEP -->
+  <div id="ss1" style="width:100%;max-width:340px">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:48px;margin-bottom:10px">📱</div>
+      <div class="onb-h" style="margin-bottom:6px">НОМЕР ТЕЛЕФОНА</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6">Отправим SMS с кодом подтверждения.<br>Номер нигде не публикуется.</div>
     </div>
-    <div id="ss2" style="display:none">
-      <h3>ВВЕДИТЕ КОД</h3>
-      <p>Код отправлен на ваш номер</p>
-      <input type="number" id="sms-code" class="inp" placeholder="_ _ _ _" maxlength="4" style="max-width:100%;text-align:center;letter-spacing:10px;font-size:22px;margin-bottom:10px">
-      <button class="btn" style="max-width:100%" onclick="verifySMS()">ПОДТВЕРДИТЬ</button>
-      <div class="demo-hint">ДЕМО КОД: <b>1234</b></div>
+    <!-- Phone input with country code -->
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <div style="background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.2);border-radius:6px;padding:0 12px;display:flex;align-items:center;gap:6px;flex-shrink:0;cursor:pointer" onclick="toggleCountryPicker()">
+        <span id="flag-ico">🇰🇿</span>
+        <span id="dial-code" style="font-family:var(--display);font-size:13px;color:var(--text);letter-spacing:1px">+7</span>
+        <span style="color:var(--text3);font-size:10px">▼</span>
+      </div>
+      <input type="tel" id="sms-phone" class="inp" placeholder="(777) 123-45-67"
+        style="flex:1;margin:0;font-size:16px;letter-spacing:1px"
+        oninput="formatPhone(this)" maxlength="15">
+    </div>
+    <!-- Country picker -->
+    <div id="country-picker" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:12px;max-height:160px;overflow-y:auto">
+      <div onclick="selectCountry('🇰🇿','+7','KZ')" style="padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px;border-bottom:1px solid var(--border)">🇰🇿 <span style="color:var(--text)">Казахстан</span> <span style="color:var(--text3);margin-left:auto">+7</span></div>
+      <div onclick="selectCountry('🇷🇺','+7','RU')" style="padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px;border-bottom:1px solid var(--border)">🇷🇺 <span style="color:var(--text)">Россия</span> <span style="color:var(--text3);margin-left:auto">+7</span></div>
+      <div onclick="selectCountry('🇺🇿','+998','UZ')" style="padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px;border-bottom:1px solid var(--border)">🇺🇿 <span style="color:var(--text)">Узбекистан</span> <span style="color:var(--text3);margin-left:auto">+998</span></div>
+      <div onclick="selectCountry('🇰🇬','+996','KG')" style="padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px;border-bottom:1px solid var(--border)">🇰🇬 <span style="color:var(--text)">Кыргызстан</span> <span style="color:var(--text3);margin-left:auto">+996</span></div>
+      <div onclick="selectCountry('🇦🇿','+994','AZ')" style="padding:10px 14px;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px">🇦🇿 <span style="color:var(--text)">Азербайджан</span> <span style="color:var(--text3);margin-left:auto">+994</span></div>
+    </div>
+    <!-- reCAPTCHA container (invisible) -->
+    <div id="recaptcha-container"></div>
+    <button class="btn" style="width:100%" onclick="sendSMS()">📨 ПОЛУЧИТЬ КОД</button>
+    <div id="sms-sending" style="display:none;text-align:center;padding:12px;color:var(--neon);font-family:var(--display);font-size:11px;letter-spacing:2px">
+      <div style="display:inline-block;width:16px;height:16px;border:2px solid var(--neon);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:8px;vertical-align:middle"></div>
+      ОТПРАВКА SMS...
+    </div>
+    <div id="sms-error" style="display:none;text-align:center;margin-top:10px;padding:10px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.2);border-radius:6px;color:var(--red);font-size:12px"></div>
+  </div>
+
+  <!-- CODE INPUT STEP -->
+  <div id="ss2" style="display:none;width:100%;max-width:340px">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="font-size:48px;margin-bottom:10px">🔐</div>
+      <div class="onb-h" style="margin-bottom:6px">ВВЕДИТЕ КОД</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6">Код отправлен на номер<br><span id="sent-to" style="color:var(--neon);font-family:var(--display);letter-spacing:1px"></span></div>
+    </div>
+    <!-- 6-digit code input boxes -->
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px">
+      <input class="code-box" id="cb0" maxlength="1" type="tel" oninput="codeInput(this,0)" onkeydown="codeKey(event,0)">
+      <input class="code-box" id="cb1" maxlength="1" type="tel" oninput="codeInput(this,1)" onkeydown="codeKey(event,1)">
+      <input class="code-box" id="cb2" maxlength="1" type="tel" oninput="codeInput(this,2)" onkeydown="codeKey(event,2)">
+      <input class="code-box" id="cb3" maxlength="1" type="tel" oninput="codeInput(this,3)" onkeydown="codeKey(event,3)">
+      <input class="code-box" id="cb4" maxlength="1" type="tel" oninput="codeInput(this,4)" onkeydown="codeKey(event,4)">
+      <input class="code-box" id="cb5" maxlength="1" type="tel" oninput="codeInput(this,5)" onkeydown="codeKey(event,5)">
+    </div>
+    <button class="btn" style="width:100%" id="verify-btn" onclick="verifySMS()">✅ ПОДТВЕРДИТЬ</button>
+    <div id="code-error" style="display:none;text-align:center;margin-top:10px;padding:10px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.2);border-radius:6px;color:var(--red);font-size:12px"></div>
+    <!-- Resend timer -->
+    <div style="text-align:center;margin-top:14px">
+      <span id="resend-timer" style="font-size:12px;color:var(--text3)">Повторная отправка через <span id="timer-count" style="color:var(--neon)">60</span> сек</span>
+      <span id="resend-btn" style="display:none;font-size:12px;color:var(--neon);cursor:pointer;text-decoration:underline" onclick="sendSMS()">Отправить снова</span>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <span style="font-size:11px;color:var(--text3);cursor:pointer" onclick="el('ss1').style.display='block';el('ss2').style.display='none'">← Изменить номер</span>
     </div>
   </div>
 </div>
@@ -789,11 +841,32 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
       </div>
     </div>
   </div>
-  <div class="qa-row">
-    <div class="qa" onclick="P('pg-pat')"><div class="qa-ico">🛠️</div><div class="qa-lbl">ПАТЕНТ</div></div>
-    <div class="qa" onclick="P('pg-jobs')"><div class="qa-ico">💼</div><div class="qa-lbl">РАБОТА</div></div>
-    <div class="qa" onclick="P('pg-fund')"><div class="qa-ico">🌱</div><div class="qa-lbl">ФОНД</div></div>
-    <div class="qa" onclick="openALAI()"><div class="qa-ico">🤖</div><div class="qa-lbl">ALAI</div></div>
+  <!-- ALAI AGENT WIDGET -->
+  <div id="dash-alai-widget" style="margin-bottom:14px;border-radius:12px;overflow:hidden;border:1px solid rgba(0,242,255,.18);background:linear-gradient(135deg,rgba(0,242,255,.04),rgba(157,0,255,.04))">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px 10px;border-bottom:1px solid rgba(0,242,255,.1)">
+      <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#0a0a18,#14142a);border:1px solid rgba(0,242,255,.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 12px rgba(0,242,255,.2)">🤖</div>
+      <div style="flex:1">
+        <div style="font-family:var(--display);font-size:13px;color:var(--text);letter-spacing:2px;font-weight:700">ALAI</div>
+        <div style="font-size:11px;color:var(--neon);display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);display:inline-block"></span>ИИ АГЕНТ · ОНЛАЙН</div>
+      </div>
+      <div onclick="openALAI()" style="background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.25);border-radius:8px;padding:6px 12px;font-family:var(--display);font-size:10px;color:var(--neon);cursor:pointer;letter-spacing:1px">ОТКРЫТЬ →</div>
+    </div>
+    <!-- Quick ask -->
+    <div style="padding:10px 14px 6px">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;letter-spacing:1px">БЫСТРЫЙ ВОПРОС</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <div onclick="openALAI();setTimeout(function(){askALAI('Что такое BSMLH?')},300)" style="background:rgba(0,242,255,.07);border:1px solid rgba(0,242,255,.15);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap">Что такое BSMLH?</div>
+        <div onclick="openALAI();setTimeout(function(){askALAI('Как зафиксировать патент?')},300)" style="background:rgba(246,133,27,.07);border:1px solid rgba(246,133,27,.15);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap">Как подать патент?</div>
+        <div onclick="openALAI();setTimeout(function(){askALAI('Как заработать QRT?')},300)" style="background:rgba(13,255,140,.06);border:1px solid rgba(13,255,140,.13);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap">Как заработать QRT?</div>
+        <div onclick="openALAI();setTimeout(function(){askALAI('Найди мне работу')},300)" style="background:rgba(157,0,255,.07);border:1px solid rgba(157,0,255,.15);border-radius:20px;padding:6px 12px;font-size:11px;color:var(--text2);cursor:pointer;white-space:nowrap">Найди работу</div>
+      </div>
+    </div>
+    <!-- Mini input -->
+    <div style="display:flex;gap:8px;padding:8px 14px 12px">
+      <input id="dash-ai-inp" placeholder="Спросить ALAI что угодно..." style="flex:1;background:rgba(0,242,255,.05);border:1px solid rgba(0,242,255,.15);border-radius:20px;padding:9px 14px;color:var(--text);font-family:var(--font);font-size:13px;outline:none" onkeydown="if(event.key==='Enter'){var v=this.value.trim();if(v){openALAI();setTimeout(function(){askALAI(v)},300);document.getElementById('dash-ai-inp').value=''}}">
+      <button onclick="var v=document.getElementById('dash-ai-inp').value.trim();if(v){openALAI();setTimeout(function(){askALAI(v)},300);document.getElementById('dash-ai-inp').value=''}" style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#00f2ff,#0080aa);border:none;color:#050508;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">➤</button>
+    </div>
   </div>
   <div class="sec-hdr">// LIVE FEED</div>
   <div id="feed-list"></div>
@@ -875,24 +948,24 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div style="height:16px"></div>
 </div>
 
-<div id="pg-svc" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-svc')\">←</div><span class="pg-title">SERVICES</span></div><div class="pg-body"><div class="panel"><h3>ПЛАТЁЖНЫЕ СИСТЕМЫ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div></div></div>
+<div id="pg-svc" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-svc')">←</div><span class="pg-title">SERVICES</span></div><div class="pg-body"><div class="panel"><h3>ПЛАТЁЖНЫЕ СИСТЕМЫ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div></div></div>
 
-<div id="pg-fav" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-fav')\">←</div><span class="pg-title">FAVORITES</span></div><div class="pg-body"><div style="text-align:center;padding:48px 0"><div style="font-size:44px;margin-bottom:12px">📦</div><div style="font-family:var(--display);font-size:12px;color:var(--text3);letter-spacing:2px">ПУСТО</div></div></div></div>
+<div id="pg-fav" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fav')">←</div><span class="pg-title">FAVORITES</span></div><div class="pg-body"><div style="text-align:center;padding:48px 0"><div style="font-size:44px;margin-bottom:12px">📦</div><div style="font-family:var(--display);font-size:12px;color:var(--text3);letter-spacing:2px">ПУСТО</div></div></div></div>
 
-<div id="pg-card" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-card')\">←</div><span class="pg-title">CARDS & OFFERS</span></div><div class="pg-body">
+<div id="pg-card" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-card')">←</div><span class="pg-title">CARDS & OFFERS</span></div><div class="pg-body">
   <div class="bcard"><div class="bc-shine"></div><span class="bc-chip">🛡️</span><div class="bc-name" id="c-name">ПОЛЬЗОВАТЕЛЬ</div><div class="bc-num">•••• ••••••<span id="c-last4">7711</span></div><div class="bc-bot"><div><div class="bc-lbl">VALID THRU</div><div class="bc-val" id="c-exp">11/27</div></div><div style="text-align:right"><div class="bc-lbl">NETWORK</div><div class="bc-net">BSMLH</div></div></div><div class="bc-foot">BIOMETRIC SECURITY MULTIFUNCTIONAL LEDGER FOR HUMANITY</div></div>
   <div class="panel" style="cursor:pointer" onclick="T('🎁 Активировано! +10 QRT')"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:26px">🎁</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Бонус за первое изобретение</div><div style="font-size:12px;color:var(--text2);margin-top:2px">+10 QRT при фиксации L2</div></div></div></div>
   <div class="panel" style="cursor:pointer" onclick="T('🤝 Ссылка скопирована')"><div style="display:flex;align-items:center;gap:12px"><div style="font-size:26px">🤝</div><div><div style="font-size:14px;font-weight:600;color:var(--text)">Пригласи друга</div><div style="font-size:12px;color:var(--text2);margin-top:2px">+3 QRT за реферала</div></div></div></div>
 </div></div>
 
-<div id="pg-stk" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-stk')\">←</div><span class="pg-title">STICKERS</span></div><div class="pg-body">
+<div id="pg-stk" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-stk')">←</div><span class="pg-title">STICKERS</span></div><div class="pg-body">
   <div class="stk-sec">// BSMLH ORIGINAL</div>
   <div class="stk-grid"><div onclick="T('🛡️')">🛡️</div><div onclick="T('💡')">💡</div><div onclick="T('🌱')">🌱</div><div onclick="T('🔐')">🔐</div><div onclick="T('⚡')">⚡</div><div onclick="T('🌍')">🌍</div><div onclick="T('🏆')">🏆</div><div onclick="T('🤝')">🤝</div></div>
   <div class="stk-sec">// УРОВНИ РЕПУТАЦИИ</div>
   <div class="stk-grid"><div onclick="T('⚪ Новый')">⚪</div><div onclick="T('🟢 Активный')">🟢</div><div onclick="T('🔵 Надёжный')">🔵</div><div onclick="T('🟣 Доверенный')">🟣</div><div onclick="T('⭐ Легенда')">⭐</div><div onclick="T('👑 Основатель')">👑</div><div onclick="T('🧬 Верифицирован')">🧬</div><div onclick="T('💎 VIP')">💎</div></div>
 </div></div>
 
-<div id="pg-set" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-set')\">←</div><span class="pg-title">SETTINGS</span></div><div class="pg-body" style="padding:0">
+<div id="pg-set" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-set')">←</div><span class="pg-title">SETTINGS</span></div><div class="pg-body" style="padding:0">
   <div class="set-head"><div class="set-av"><img id="set-av" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Ccircle cx='25' cy='25' r='25' fill='%2316161f'/%3E%3Ctext x='25' y='32' text-anchor='middle' font-size='20' fill='%23303048'%3E👤%3C/text%3E%3C/svg%3E"></div><div><div style="font-family:var(--display);font-size:13px;color:var(--text);letter-spacing:1px" id="set-name">ПОЛЬЗОВАТЕЛЬ</div><div style="font-family:var(--display);font-size:8px;color:var(--text3);margin-top:3px;letter-spacing:1.5px" id="set-huid">···</div></div></div>
   <div style="padding:12px 16px">
   <div class="m-group">
@@ -903,12 +976,21 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
       <span class="mi-arrow">›</span>
     </div>
   </div>
+  <div class="m-group" style="padding:14px 16px">
+    <div style="font-size:11px;color:var(--text3);letter-spacing:2px;font-family:var(--display);margin-bottom:8px">🤖 ALAI API КЛЮЧ</div>
+    <div style="display:flex;gap:8px">
+      <input id="ai-key-inp" type="password" placeholder="sk-ant-api03-..." style="flex:1;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-family:monospace;font-size:12px;outline:none">
+      <button onclick="saveAIKey()" style="background:rgba(0,242,255,.1);border:1px solid rgba(0,242,255,.25);color:var(--neon);border-radius:6px;padding:9px 16px;font-family:var(--display);font-size:11px;cursor:pointer;white-space:nowrap">СОХРАНИТЬ</button>
+    </div>
+    <div id="ai-key-status" style="font-size:11px;color:var(--text3);margin-top:6px"><span id="ai-key-st">Ключ не установлен</span></div>
+    <div style="font-size:10px;color:var(--text3);margin-top:4px">Получить ключ: <a href="https://console.anthropic.com" target="_blank" style="color:var(--neon)">console.anthropic.com</a></div>
+  </div>
   <div class="m-group"><div class="m-item" onclick="P('pg-chip')"><span class="mi-ico">🛡️</span><span class="mi-txt">BSMLH CHIP</span><span class="mi-val" id="chip-set-val">Не активен</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔔</span><span class="mi-txt">Уведомления</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🌐</span><span class="mi-txt">Язык</span><span class="mi-val">Русский</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">🔒</span><span class="mi-txt">Приватность</span><span class="mi-arrow">›</span></div><div class="m-item"><span class="mi-ico">ℹ️</span><span class="mi-txt">О приложении</span><span class="mi-val" style="font-family:var(--display)">v13.0</span><span class="mi-arrow">›</span></div></div>
   <div style="padding:14px 0"><button onclick="exitApp()" style="width:100%;padding:14px;border-radius:3px;border:1px solid rgba(255,51,102,.25);background:rgba(255,51,102,.06);color:var(--red);font-weight:700;font-size:12px;cursor:pointer;font-family:var(--display);letter-spacing:2px">ВЫЙТИ</button></div>
   </div>
 </div></div>
 
-<div id="pg-chip" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-chip')\">←</div><span class="pg-title">BSMLH CHIP</span></div><div class="pg-body">
+<div id="pg-chip" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-chip')">←</div><span class="pg-title">BSMLH CHIP</span></div><div class="pg-body">
   <div style="background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border-gold);border-radius:4px;padding:18px;display:flex;align-items:center;gap:14px;margin-bottom:14px">
     <div style="font-size:40px">🛡️</div>
     <div><div style="font-family:var(--display);font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:4px">BSMLH CHIP</div><div style="font-size:13px;color:var(--text2)" id="chip-info">Статус: ❌ Не активен</div></div>
@@ -922,7 +1004,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div class="panel" style="margin-top:12px"><div style="font-size:12px;color:var(--text2);line-height:1.7">BSMLH CHIP — физический NFC-чип нового поколения. Верифицирует вашу биометрическую личность и открывает полный доступ к платформе и смарт-контрактам.</div></div>
 </div></div>
 
-<div id="pg-pat" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-pat')\">←</div><span class="pg-title">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div><div class="pg-body">
+<div id="pg-pat" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-pat')">←</div><span class="pg-title">ПАТЕНТНАЯ МАСТЕРСКАЯ</span></div><div class="pg-body">
   <div id="inv-list"></div>
   <div class="panel" style="cursor:pointer;display:flex;align-items:center;gap:13px" onclick="P('pg-media')">
     <div style="font-size:28px">🎬</div>
@@ -943,7 +1025,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   </div>
 </div></div>
 
-<div id="pg-media" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-media')\">←</div><span class="pg-title">МЕДИАФИКСАЦИЯ</span></div><div class="pg-body">
+<div id="pg-media" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-media')">←</div><span class="pg-title">МЕДИАФИКСАЦИЯ</span></div><div class="pg-body">
   <div class="panel"><div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.7">Загрузите файл — система создаст SHA-256 хэш и зафиксирует дату. Цифровое доказательство вашего авторства.</div>
     <div class="drop-zone" id="drop-z" onclick="document.getElementById('media-inp').click()">
       <div style="font-size:38px;margin-bottom:8px">📁</div>
@@ -963,14 +1045,14 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   <div id="media-list"></div>
 </div></div>
 
-<div id="pg-wal" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-wal')\">←</div><span class="pg-title">QRT КОШЕЛЁК</span></div><div class="pg-body">
+<div id="pg-wal" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-wal')">←</div><span class="pg-title">QRT КОШЕЛЁК</span></div><div class="pg-body">
   <div class="qrt-hero"><div class="qh-lbl">QRT БАЛАНС</div><div class="qh-amt" id="w-qrt">0.01</div><div class="qh-name">QUANTUM REWARD TOKEN</div></div>
   <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><div style="font-family:var(--display);font-size:9px;color:var(--text3);letter-spacing:2px">QRNC РЕПУТАЦИЯ</div><div style="font-family:var(--display);font-size:15px;font-weight:900;color:var(--neon)" id="w-qrnc">0</div></div><div class="bar-wrap"><div class="bar" id="qrnc-bar" style="width:0%"></div></div></div>
   <div class="panel"><h3>ПОПОЛНИТЬ</h3><div class="pay-grid"><a href="https://stripe.com" target="_blank" class="pay-btn"><span>💳</span>VISA</a><a href="https://paypal.com" target="_blank" class="pay-btn"><span>🅿️</span>PAYPAL</a><a href="https://coinbase.com" target="_blank" class="pay-btn"><span>₿</span>CRYPTO</a><a href="https://pay.google.com" target="_blank" class="pay-btn"><span>G</span>GPAY</a><a href="https://apple.com/apple-pay" target="_blank" class="pay-btn"><span>🍎</span>APPLE</a><a href="https://westernunion.com" target="_blank" class="pay-btn"><span>🌐</span>WUNION</a></div></div>
   <div class="panel"><h3>ИСТОРИЯ</h3><div id="hist-list"><div class="hist-row"><span>✅ Аккаунт создан</span><span style="color:var(--green);font-family:var(--display);font-size:10px">+0.01 QRT</span></div></div></div>
 </div></div>
 
-<div id="pg-fund" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-fund')\">←</div><span class="pg-title">HUMANITY FUND</span></div><div class="pg-body">
+<div id="pg-fund" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-fund')">←</div><span class="pg-title">HUMANITY FUND</span></div><div class="pg-body">
   <div class="fund-hero"><div class="fh-ico">🌍</div><div class="fh-title">HUMANITY FUND</div><div class="fh-sub">Твой вклад в будущее человечества</div></div>
   <div class="fund-card" onclick="doFund('🌱 Посадил дерево! +5 QRNC')"><div class="f-ico">🌱</div><div><div class="f-name">Посадить дерево</div><div class="f-desc">Озеленение планеты</div><div class="f-rew">+5 QRNC</div></div></div>
   <div class="fund-card" onclick="doFund('🤝 Сделал добро! +3 QRNC')"><div class="f-ico">🤝</div><div><div class="f-name">Сделать добро</div><div class="f-desc">Помочь ближнему</div><div class="f-rew">+3 QRNC</div></div></div>
@@ -986,7 +1068,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
 <!-- БИРЖА ТРУДА -->
 
-<div id="pg-jobs" class="pg"><div class="pg-hdr"><div class="pg-back" onclick=\"C('pg-jobs')\">←</div><span class="pg-title">БИРЖА ТРУДА</span></div><div class="pg-body">
+<div id="pg-jobs" class="pg"><div class="pg-hdr"><div class="pg-back" onclick="C('pg-jobs')">←</div><span class="pg-title">БИРЖА ТРУДА</span></div><div class="pg-body">
   <div class="jtabs">
     <button class="jtab on" id="jt0" onclick="jobTab(0)">🔍 ИСПОЛНИТЕЛИ</button>
     <button class="jtab" id="jt1" onclick="jobTab(1)">📋 ВАКАНСИИ</button>
@@ -1245,28 +1327,12 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
   </div><!-- /app-body -->
 
   <!-- BOTTOM NAV -->
-  <nav style="display:flex;justify-content:space-around;align-items:center;padding:8px 0;padding-bottom:max(14px,var(--safe-bot));background:rgba(5,5,8,.98);border-top:1px solid var(--border);flex-shrink:0">
-    <div id="nb-dash" class="nb on" onclick="tab('dash','BSMLH')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
-      <div class="nb-ico">🏠</div>
-      <div class="nb-lbl">ГЛАВНАЯ</div>
-    </div>
-    <div id="nb-maps" class="nb" onclick="tab('maps','КАРТА')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
-      <div class="nb-ico">🗺️</div>
-      <div class="nb-lbl">КАРТА</div>
-    </div>
-    <div id="nb-chat" class="nb" onclick="openCommunityChat()" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px;position:relative">
-      <div class="nb-ico">💬</div>
-      <div class="nb-lbl" style="color:var(--green)">ЧАТ</div>
-      <div style="position:absolute;top:2px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite"></div>
-    </div>
-    <div id="nb-hub" class="nb" onclick="tab('hub','HUB')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
-      <div class="nb-ico">⚡</div>
-      <div class="nb-lbl">HUB</div>
-    </div>
-    <div id="nb-prof" class="nb" onclick="tab('prof','ПРОФИЛЬ')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
-      <div class="nb-ico">👤</div>
-      <div class="nb-lbl">ПРОФИЛЬ</div>
-    </div>
+  <nav style="display:flex;justify-content:space-around;align-items:center;padding:0;padding-bottom:max(10px,var(--safe-bot));background:rgba(5,5,8,.98);border-top:1px solid var(--border);flex-shrink:0">
+    <div id="nb-dash" class="nb on" onclick="tab('dash','BSMLH')">ГЛАВНАЯ</div>
+    <div id="nb-maps" class="nb" onclick="tab('maps','КАРТА')">КАРТА</div>
+    <div id="nb-chat" class="nb" onclick="openCommunityChat()" style="position:relative">ЧАТ<span style="position:absolute;top:8px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)"></span></div>
+    <div id="nb-hub" class="nb" onclick="tab('hub','HUB')">HUB</div>
+    <div id="nb-prof" class="nb" onclick="tab('prof','ПРОФИЛЬ')">ПРОФИЛЬ</div>
   </nav>
 
 </div><!-- /app -->
@@ -1321,6 +1387,7 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
 <script>
 var U={name:'',huid:'',photo:'',qrt:0.01,qrnc:0,invs:[],lv:1,hasChip:false};
+var _alaiKey = localStorage.getItem('bsmlh_aikey')||'';
 var _tt=null;
 
 // ── PARTICLES ──
@@ -1482,8 +1549,162 @@ function refreshChipUI(){
   set('chip-info','Статус: '+(U.hasChip?'✅ Активен':'❌ Не активен'));
 }
 function showSMS(){el('s3').classList.remove('on');el('s4').classList.add('on');}
-function sendSMS(){if(!el('sms-phone').value.trim()){T('⚠️ ВВЕДИТЕ НОМЕР');return;}el('ss1').style.display='none';el('ss2').style.display='block';T('📱 КОД ОТПРАВЛЕН');}
-function verifySMS(){if(el('sms-code').value==='1234')toApp();else T('❌ НЕВЕРНЫЙ КОД');}
+
+var _dialCode = '+7';
+var _confirmResult = null;
+var _resendTimer = null;
+
+function toggleCountryPicker(){
+  var p=el('country-picker');
+  p.style.display=p.style.display==='none'?'block':'none';
+}
+function selectCountry(flag,dial,code){
+  _dialCode=dial;
+  el('flag-ico').innerText=flag;
+  el('dial-code').innerText=dial;
+  el('country-picker').style.display='none';
+}
+function formatPhone(inp){
+  var v=inp.value.replace(/\D/g,'');
+  inp.value=v;
+}
+
+function sendSMS(){
+  var raw=el('sms-phone').value.replace(/\D/g,'');
+  if(!raw||raw.length<7){T('⚠️ Введите номер телефона');return;}
+  var phone=_dialCode+raw;
+  el('sms-sending').style.display='block';
+  el('sms-error').style.display='none';
+  document.querySelector('#ss1 .btn').style.display='none';
+
+  // Init recaptcha if needed
+  if(!window._recaptchaVerifier){
+    try{
+      window._recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container',{
+        'size':'invisible',
+        'callback':function(){}
+      });
+    }catch(e){
+      // Firebase not ready yet - fallback to demo
+      _fallbackSMS(phone); return;
+    }
+  }
+
+  var auth = firebase.auth();
+  auth.signInWithPhoneNumber(phone, window._recaptchaVerifier)
+    .then(function(confirmResult){
+      _confirmResult = confirmResult;
+      el('sms-sending').style.display='none';
+      el('ss1').style.display='none';
+      el('ss2').style.display='block';
+      el('sent-to').innerText=phone;
+      el('cb0').focus();
+      startResendTimer();
+      T('📱 SMS отправлен!');
+    })
+    .catch(function(err){
+      el('sms-sending').style.display='none';
+      document.querySelector('#ss1 .btn').style.display='block';
+      var msg = err.code==='auth/invalid-phone-number'?'Неверный формат номера':
+                err.code==='auth/too-many-requests'?'Слишком много попыток. Подождите.':
+                err.code==='auth/quota-exceeded'?'Лимит SMS исчерпан. Используем демо-режим.':
+                'Ошибка: '+err.message;
+      el('sms-error').innerText=msg;
+      el('sms-error').style.display='block';
+      // Fallback to demo if quota exceeded
+      if(err.code==='auth/quota-exceeded'||err.code==='auth/billing-not-enabled'){
+        setTimeout(function(){_fallbackSMS(phone);},1500);
+      }
+      if(window._recaptchaVerifier){
+        try{window._recaptchaVerifier.clear();}catch(e){}
+        window._recaptchaVerifier=null;
+      }
+    });
+}
+
+function _fallbackSMS(phone){
+  _confirmResult = null;
+  el('sms-sending').style.display='none';
+  el('sms-error').style.display='none';
+  el('ss1').style.display='none';
+  el('ss2').style.display='block';
+  el('sent-to').innerText=phone+' (демо)';
+  el('cb0').focus();
+  startResendTimer();
+  T('📱 ДЕМО КОД: 1 2 3 4 5 6');
+}
+
+function codeInput(inp, idx){
+  var v=inp.value.replace(/\D/g,'');
+  inp.value=v;
+  if(v) inp.classList.add('filled');
+  else inp.classList.remove('filled');
+  if(v && idx<5) el('cb'+(idx+1)).focus();
+  // Auto verify when all 6 filled
+  var code='';
+  for(var i=0;i<6;i++) code+=(el('cb'+i).value||'');
+  if(code.length===6) verifySMS();
+}
+function codeKey(e, idx){
+  if(e.key==='Backspace'&&!el('cb'+idx).value&&idx>0){
+    el('cb'+(idx-1)).focus();
+    el('cb'+(idx-1)).value='';
+    el('cb'+(idx-1)).classList.remove('filled');
+  }
+}
+
+function startResendTimer(){
+  var count=60;
+  el('resend-timer').style.display='inline';
+  el('resend-btn').style.display='none';
+  el('timer-count').innerText=count;
+  if(_resendTimer) clearInterval(_resendTimer);
+  _resendTimer=setInterval(function(){
+    count--;
+    el('timer-count').innerText=count;
+    if(count<=0){
+      clearInterval(_resendTimer);
+      el('resend-timer').style.display='none';
+      el('resend-btn').style.display='inline';
+    }
+  },1000);
+}
+
+function verifySMS(){
+  var code='';
+  for(var i=0;i<6;i++) code+=(el('cb'+i)?el('cb'+i).value:'');
+  if(code.length<6){T('⚠️ Введите все 6 цифр');return;}
+  var btn=el('verify-btn');
+  btn.innerText='⏳ ПРОВЕРКА...';btn.disabled=true;
+  el('code-error').style.display='none';
+
+  if(_confirmResult){
+    _confirmResult.confirm(code)
+      .then(function(result){
+        btn.innerText='✅ ПОДТВЕРДИТЬ';btn.disabled=false;
+        T('✅ Номер подтверждён!');
+        toApp();
+      })
+      .catch(function(err){
+        btn.innerText='✅ ПОДТВЕРДИТЬ';btn.disabled=false;
+        el('code-error').innerText='Неверный код. Попробуйте ещё раз.';
+        el('code-error').style.display='block';
+        // Shake animation
+        for(var i=0;i<6;i++){var b=el('cb'+i);if(b){b.style.borderColor='var(--red)';setTimeout(function(b){b.style.borderColor='';},600,b);}}
+      });
+  } else {
+    // Demo fallback
+    if(code==='123456'){
+      btn.innerText='✅ ПОДТВЕРДИТЬ';btn.disabled=false;
+      T('✅ Номер подтверждён! (демо)');
+      toApp();
+    } else {
+      btn.innerText='✅ ПОДТВЕРДИТЬ';btn.disabled=false;
+      el('code-error').innerText='Демо код: 1 2 3 4 5 6';
+      el('code-error').style.display='block';
+    }
+  }
+}
 
 // ── LAUNCH APP ──
 function toApp(){
@@ -1839,7 +2060,12 @@ async function askALAI(question){
   try{
     var resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':_alaiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-allow-browser':'true'
+      },
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -2444,6 +2670,27 @@ function fixInv(t,n){
   });
 }
 
+function saveAIKey(){
+  var inp = document.getElementById('ai-key-inp');
+  if(!inp) return;
+  var key = inp.value.trim();
+  if(!key){T('⚠️ Введите ключ');return;}
+  if(!key.startsWith('sk-ant')){T('⚠️ Неверный формат ключа');return;}
+  _alaiKey = key;
+  localStorage.setItem('bsmlh_aikey', key);
+  inp.value = '';
+  var st = document.getElementById('ai-key-st');
+  if(st) st.innerHTML = '<span style="color:var(--green)">✅ Ключ сохранён · ALAI активен</span>';
+  T('✅ ALAI активирован!');
+}
+(function(){
+  var k = localStorage.getItem('bsmlh_aikey');
+  if(k){ _alaiKey=k; }
+  // update status on settings open
+  var st = document.getElementById('ai-key-st');
+  if(st && k) st.innerHTML = '<span style="color:var(--green)">✅ Ключ сохранён · ALAI активен</span>';
+})();
+
 function toggleTheme(){
   var isLight = document.body.classList.toggle('light');
   localStorage.setItem('bsmlh_theme', isLight?'light':'dark');
@@ -2501,6 +2748,7 @@ function initFirebase(){
     };
     _fbApp  = firebase.initializeApp(config);
     _fbDb   = firebase.database();
+    firebase.auth().useDeviceLanguage();
     _chatRef   = _fbDb.ref('chat/messages');
     _onlineRef = _fbDb.ref('chat/online');
     console.log('✅ Firebase connected');
