@@ -1242,6 +1242,35 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 </div>
 
 
+  </div><!-- /app-body -->
+
+  <!-- BOTTOM NAV -->
+  <nav style="display:flex;justify-content:space-around;align-items:center;padding:8px 0;padding-bottom:max(14px,var(--safe-bot));background:rgba(5,5,8,.98);border-top:1px solid var(--border);flex-shrink:0">
+    <div id="nb-dash" class="nb on" onclick="tab('dash','BSMLH')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
+      <div class="nb-ico">🏠</div>
+      <div class="nb-lbl">ГЛАВНАЯ</div>
+    </div>
+    <div id="nb-maps" class="nb" onclick="tab('maps','КАРТА')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
+      <div class="nb-ico">🗺️</div>
+      <div class="nb-lbl">КАРТА</div>
+    </div>
+    <div id="nb-chat" class="nb" onclick="openCommunityChat()" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px;position:relative">
+      <div class="nb-ico">💬</div>
+      <div class="nb-lbl" style="color:var(--green)">ЧАТ</div>
+      <div style="position:absolute;top:2px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite"></div>
+    </div>
+    <div id="nb-hub" class="nb" onclick="tab('hub','HUB')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
+      <div class="nb-ico">⚡</div>
+      <div class="nb-lbl">HUB</div>
+    </div>
+    <div id="nb-prof" class="nb" onclick="tab('prof','ПРОФИЛЬ')" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 14px;cursor:pointer;min-width:56px">
+      <div class="nb-ico">👤</div>
+      <div class="nb-lbl">ПРОФИЛЬ</div>
+    </div>
+  </nav>
+
+</div><!-- /app -->
+
 <!-- ALAI FAB -->
 <div class="alai-fab" id="alai-fab" onclick="openALAI()" style="display:none">
   <div class="alai-pulse"></div><div class="alai-pulse"></div>
@@ -1334,6 +1363,8 @@ function tab(t,lbl){
     if(v)v.className='tv'+(id===t?' on':'');
     if(b)b.className='nb'+(id===t?' on':'');
   });
+  // deactivate chat nav btn when switching tabs
+  var nc=el('nb-chat'); if(nc) nc.className='nb';
   set('hdr-lbl',lbl);
 }
 
