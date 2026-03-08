@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>BSMLH</title>
 <style>
-/* fonts loaded async */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root{
 –gold:#f6851b;
@@ -25,8 +25,8 @@
 –wc:#f0f2f8;
 –wc2:#ffffff;
 –radius:16px;
-–font-main:-apple-system,BlinkMacSystemFont,‘Segoe UI’,Arial,sans-serif;
-–font-display:‘Courier New’,Courier,monospace;
+–font-main:‘Inter’,sans-serif;
+–font-display:‘Orbitron’,monospace;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
@@ -43,8 +43,8 @@ body{background:var(–dark);color:var(–text);font-family:var(–font-main);he
 /* ═══════════════════════════════
 SPLASH
 ═══════════════════════════════ */
-#splash{position:fixed;inset:0;z-index:9999;background:var(–dark);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s}
-
+#splash{position:fixed;inset:0;z-index:9999;background:var(–dark);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:splashOut 0.6s forwards 2.8s}
+@keyframes splashOut{to{opacity:0;visibility:hidden;pointer-events:none}}
 .splash-logo{font-family:var(–font-display);font-size:48px;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(–gold),var(–gold2),var(–neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:logoIn 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards}
 @keyframes logoIn{from{opacity:0;transform:scale(0.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .splash-sub{font-size:9px;color:var(–text2);letter-spacing:3px;text-transform:uppercase;margin-top:12px;animation:fadeUp 0.6s ease forwards 0.4s;opacity:0}
@@ -61,13 +61,14 @@ SPLASH
 ЭКРАНЫ ОНБОРДИНГА
 ═══════════════════════════════ */
 .screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;z-index:100;background:var(–dark)}
-.screen.active{display:flex}
+.screen.active{display:flex;animation:screenIn 0.4s cubic-bezier(0.34,1.2,0.64,1)}
+@keyframes screenIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
 .onb-tag{font-family:var(–font-display);font-size:9px;color:var(–neon);letter-spacing:3px;margin-bottom:8px;text-transform:uppercase}
 .onb-title{font-size:26px;font-weight:700;text-align:center;margin-bottom:8px;line-height:1.2}
 .onb-sub{font-size:13px;color:var(–text2);text-align:center;margin-bottom:32px;line-height:1.6;max-width:280px}
 
-/* Прогресс регистрации */
+/* Прогресс онбординга */
 .onb-progress{display:flex;gap:6px;margin-bottom:32px}
 .onb-step{width:24px;height:3px;border-radius:2px;background:var(–border)}
 .onb-step.done{background:var(–gold)}
@@ -235,9 +236,9 @@ footer{height:auto;min-height:58px;padding-bottom:max(10px,env(safe-area-inset-b
 /* ═══════════════════════════════
 СТРАНИЦЫ (pg-)
 ═══════════════════════════════ */
-.pg{position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0f !important;z-index:6000;display:none;flex-direction:column}
-.pg.on{display:flex}
-#app.dark .pg{background:#0a0a0f}
+.pg{position:fixed;top:0;left:0;right:0;bottom:0;background:var(–wc);z-index:6000;display:none;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.34,1.1,0.64,1)}
+.pg.on{display:flex;transform:translateX(0)}
+#app.dark .pg{background:var(–dark)}
 .pgh{height:54px;background:#fff;display:flex;align-items:center;padding:0 16px;gap:10px;border-bottom:0.5px solid rgba(0,0,0,0.08);flex-shrink:0;font-weight:600;font-size:16px;color:#000}
 #app.dark .pgh{background:var(–dark2);border-bottom:1px solid var(–border);color:#fff}
 .bk{font-size:22px;cursor:pointer;color:var(–gold);width:30px;line-height:1;flex-shrink:0;font-weight:300}
@@ -466,7 +467,7 @@ TOAST
     <div class="onb-step"></div>
     <div class="onb-step"></div>
   </div>
-  <div class="onb-tag">BSMLH · Регистрация</div>
+  <div class="onb-tag">BSMLH · Онбординг</div>
   <div class="onb-title" id="reg-t">Добро пожаловать</div>
   <div class="onb-sub">Введите ваше имя для создания цифровой личности</div>
   <input class="inp-neo" id="in-f" placeholder="Ваше имя" autocomplete="off">
@@ -486,7 +487,7 @@ TOAST
   <div class="onb-sub">Ваше фото привязывается к HUID-идентификатору</div>
   <video id="video-feed" autoplay playsinline></video>
   <canvas id="photo-canvas" style="display:none"></canvas>
-  <button class="btn-neo" onclick="handleScan()">📸 СКАНИРОВАНИЕ</button>
+  <button class="btn-neo" onclick="takePhoto()">📸 СДЕЛАТЬ ФОТО</button>
   <button class="btn-ghost" onclick="skipCam()">Пропустить</button>
 </div>
 
@@ -862,111 +863,9 @@ TOAST
       <div class="lv" id="lv2" onclick="slv(2)"><b>L2</b><small>Prior Art</small><div class="price">$9.99</div></div>
       <div class="lv" id="lv3" onclick="slv(3)"><b>L3</b><small>Certificate</small><div class="price">$49.99</div></div>
     </div>
-    <button class="bd" onclick="tryFixInv()">🛡️ ЗАФИКСИРОВАТЬ</button>
+    <button class="bd" onclick="tryFixInv()">🛡️ ПРИЛОЖИТЬ ЧИП И ЗАФИКСИРОВАТЬ</button>
   </div>
 </div></div>
-
-<!-- СЕРТИФИКАТ -->
-
-<div id="pg-cert" class="pg">
-  <div class="pgh">
-    <span class="bk" onclick="C('pg-cert')">‹</span>
-    📜 Патентное свидетельство
-    <button onclick="printCert()" style="margin-left:auto;padding:5px 12px;border:1px solid #888;border-radius:4px;background:transparent;color:#fff;font-size:12px;cursor:pointer">🖨</button>
-  </div>
-  <div class="pgb" style="background:#c8b89a;padding:12px">
-    <div id="cert-doc" style="
-      background:#fdf8f0;
-      border-radius:4px;
-      padding:0;
-      overflow:hidden;
-      box-shadow:0 4px 24px rgba(0,0,0,0.3);
-      max-width:480px;
-      margin:0 auto;
-      font-family:Georgia,serif;
-      border:8px solid #8b6914;
-      outline:2px solid #c8a84b;
-    ">
-
-```
-  <!-- Золотая шапка -->
-  <div style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a);padding:20px 24px 16px;text-align:center;border-bottom:3px solid #c8a84b">
-    <div style="font-size:11px;color:#c8a84b;letter-spacing:4px;margin-bottom:6px">✦ BSMLH INTELLECTUAL PROPERTY OFFICE ✦</div>
-    <div style="font-size:30px;font-weight:900;color:#c8a84b;letter-spacing:8px;font-family:Courier New,monospace;text-shadow:0 0 20px rgba(200,168,75,0.4)">BSMLH</div>
-    <div style="font-size:9px;color:rgba(200,168,75,0.6);letter-spacing:3px;margin-top:4px">BIOMETRIC SECURITY MULTIFUNCTIONAL LEDGER FOR HUMANITY</div>
-  </div>
-
-  <!-- Заголовок документа -->
-  <div style="text-align:center;padding:16px 24px 12px;border-bottom:1px solid #d4c4a0">
-    <div style="font-size:13px;color:#8b6914;letter-spacing:3px;font-weight:bold">ПАТЕНТНОЕ СВИДЕТЕЛЬСТВО</div>
-    <div style="font-size:10px;color:#aaa;letter-spacing:2px;margin-top:2px">CERTIFICATE OF INVENTION</div>
-  </div>
-
-  <!-- Тело -->
-  <div style="padding:16px 24px">
-
-    <!-- Удостоверяем -->
-    <div style="text-align:center;margin-bottom:14px">
-      <div style="font-size:11px;color:#888;letter-spacing:1px;margin-bottom:6px">настоящим удостоверяется, что</div>
-      <div id="c-author" style="font-size:20px;font-weight:bold;color:#1a1a2e;margin-bottom:4px">—</div>
-      <div id="c-huid" style="font-size:9px;color:#aaa;font-family:Courier New,monospace">—</div>
-      <div style="font-size:11px;color:#888;margin-top:6px">является автором изобретения</div>
-    </div>
-
-    <!-- Название -->
-    <div style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a);border:1px solid #c8a84b;border-radius:4px;padding:12px 16px;text-align:center;margin-bottom:14px">
-      <div id="c-title" style="font-size:16px;font-weight:bold;color:#c8a84b;line-height:1.4">—</div>
-      <div id="c-niche" style="font-size:10px;color:rgba(200,168,75,0.6);margin-top:4px;letter-spacing:2px">—</div>
-    </div>
-
-    <!-- Описание -->
-    <div style="margin-bottom:14px">
-      <div id="c-desc" style="font-size:12px;color:#444;line-height:1.6;font-style:italic">"—"</div>
-    </div>
-
-    <!-- Данные + QR -->
-    <div style="display:flex;gap:12px;background:#f0e8d8;border-radius:4px;padding:12px;margin-bottom:14px;border:1px solid #d4c4a0">
-      <div style="flex:1">
-        <div style="font-size:9px;color:#8b6914;letter-spacing:2px;font-weight:bold;margin-bottom:8px">РЕКВИЗИТЫ ПАТЕНТА</div>
-        <div style="font-size:11px;color:#333;margin-bottom:3px">№ <span id="c-id" style="font-family:Courier New,monospace;font-weight:bold">—</span></div>
-        <div style="font-size:11px;color:#333;margin-bottom:3px">Дата: <span id="c-date" style="font-weight:bold">—</span></div>
-        <div style="font-size:11px;color:#333;margin-bottom:6px">Уровень: <span id="c-lv" style="color:#8b6914;font-weight:bold">—</span></div>
-        <div style="font-size:8px;color:#aaa;word-break:break-all;font-family:Courier New,monospace;line-height:1.4">HASH:<br><span id="c-hash">—</span></div>
-      </div>
-      <div style="text-align:center;flex-shrink:0">
-        <div style="font-size:9px;color:#8b6914;letter-spacing:1px;margin-bottom:6px;font-weight:bold">ВЕРИФИКАЦИЯ</div>
-        <img id="c-qr" src="" style="width:80px;height:80px;border:1px solid #d4c4a0;border-radius:2px;display:block">
-        <div style="font-size:8px;color:#aaa;margin-top:3px">QR код</div>
-      </div>
-    </div>
-
-    <!-- Подпись -->
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:12px;border-top:2px solid #d4c4a0">
-      <div style="text-align:center">
-        <div style="font-size:20px">🛡️</div>
-        <div style="width:90px;border-top:1px solid #8b6914;padding-top:3px;font-size:8px;color:#8b6914;letter-spacing:1px;text-align:center">BSMLH VERIFIED</div>
-      </div>
-      <div style="text-align:center">
-        <div style="font-size:28px">⚖️</div>
-        <div style="font-size:8px;color:#888;letter-spacing:1px">INTELLECTUAL PROPERTY</div>
-      </div>
-      <div style="text-align:center">
-        <div style="width:90px;border-top:1px solid #888;padding-top:3px;font-size:8px;color:#888;letter-spacing:1px;text-align:center">ПОДПИСЬ АВТОРА</div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Подвал -->
-  <div style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a);padding:8px 24px;text-align:center;border-top:3px solid #c8a84b">
-    <div style="font-size:8px;color:rgba(200,168,75,0.5);letter-spacing:2px">BSMLH INTELLECTUAL PROPERTY OFFICE · PATENT PROTECTED · © 2026</div>
-  </div>
-
-</div>
-```
-
-  </div>
-</div>
 
 <!-- МЕДИАФАЙЛЫ -->
 
@@ -1170,28 +1069,18 @@ function startCam(){
   if(!n){T('⚠️ Введите имя');return;}
   U.name=n;
   el('scr-reg').classList.remove('active');
-  el('scr-scan').classList.add('active');
-}
-
-function openCamera(){
   if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    el('scr-scan').classList.add('active');
+    var ct=setTimeout(function(){
+      el('scr-scan').classList.remove('active');
+      el('scr-chip').classList.add('active');
+    },3000);
     navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}})
-      .then(function(s){el('video-feed').srcObject=s;})
-      .catch(function(){T('⚠️ Нет доступа к камере');});
+      .then(function(s){clearTimeout(ct);el('video-feed').srcObject=s;})
+      .catch(function(){clearTimeout(ct);el('scr-scan').classList.remove('active');el('scr-chip').classList.add('active');});
   } else {
-    T('⚠️ Камера недоступна');
+    el('scr-chip').classList.add('active');
   }
-}
-
-
-function handleScan(){
-  var v=el('video-feed');
-  if(!v.srcObject){
-    openCamera();
-    T('📷 Камера запущена — нажмите ещё раз для фото');
-    return;
-  }
-  takePhoto();
 }
 
 function takePhoto(){
@@ -1238,7 +1127,7 @@ async function activateChip(){
       beam.style.display='none';
       setText('chip-status','✅ Чип активирован!');
       U.hasChip=true;
-      setTimeout(toApp,800);
+      setTimeout(showSMS,800);
     };
   }catch(e){
     beam.style.display='none';
@@ -1355,14 +1244,15 @@ function tryFixInv(){
   if(!n){T('⚠️ Выберите нишу');return;}
   if(!t){T('⚠️ Введите название');return;}
   if(!U.hasChip){
-    T('🛡️ Фиксация требует верификации BSMLH CHIP. Поднесите чип для подтверждения авторства.');
+    T('🛡️ Нужен BSMLH CHIP');
+    var b=el('pat-beam');if(b)b.style.display='block';
+    setTimeout(function(){
+      var b=el('pat-beam');if(b)b.style.display='none';
+      fixInv(t,n);
+    },2000);
     return;
   }
-  var b=el('pat-beam');if(b)b.style.display='block';
-  setTimeout(function(){
-    var b=el('pat-beam');if(b)b.style.display='none';
-    fixInv(t,n);
-  },1500);
+  fixInv(t,n);
 }
 
 function fixInv(t,n){
@@ -1396,246 +1286,184 @@ function renderInvList(){
   }).join('');
 }
 
-
-
-function simpleHash(str){
-  var h=5381;
-  for(var i=0;i<str.length;i++){
-    h=((h<<5)+h)+str.charCodeAt(i);
-    h=h&h;
-  }
-  var h2=h^str.length;
-  var result='';
-  var seed=Math.abs(h).toString(16)+Math.abs(h2).toString(16)+str.length.toString(16);
-  for(var j=0;j<4;j++){
-    var p=seed+(j*1000003).toString(16);
-    var ph=5381;
-    for(var k=0;k<p.length;k++){ph=((ph<<5)+ph)+p.charCodeAt(k);ph=ph&ph;}
-    result+=Math.abs(ph).toString(16).padStart(8,'0');
-  }
-  return result;
-}
-
-
 function showCert(inv){
-  if(!inv){T('⚠️ Нет изобретения');return;}
-  var niches={IT:'IT / ТЕХНОЛОГИИ',MED:'МЕДИЦИНА',AGR:'С/Х',ENE:'ЭНЕРГЕТИКА',TRN:'ТРАНСПОРТ',ECO:'ЭКОЛОГИЯ',EDU:'ОБРАЗОВАНИЕ',FIN:'ФИНАНСЫ',OTH:'ДРУГОЕ'};
-  var s=function(id,v){var e=document.getElementById(id);if(e)e.innerText=v;};
-  s('c-author', U.name.toUpperCase());
-  s('c-huid', 'HUID: '+U.huid);
-  s('c-title', inv.t);
-  s('c-niche', niches[inv.n]||inv.n||'');
-  s('c-desc', '"'+(inv.d||'')+'"');
-  s('c-date', inv.date||'');
-  s('c-id', inv.id||'');
-  s('c-lv', 'L'+inv.lv+' · '+(inv.lv===1?'Timestamp':inv.lv===2?'Prior Art':'Certificate'));
-  var hash = simpleHash(inv.t+'|'+U.huid+'|'+(inv.date||'')+'|'+inv.id);
-  s('c-hash', hash);
-  var qr=document.getElementById('c-qr');
-  if(qr){
-    var data=encodeURIComponent('BSMLH:PATENT:'+inv.id+':'+U.huid);
-    qr.src='https://api.qrserver.com/v1/create-qr-code/?size=80x80&data='+data+'&margin=4&bgcolor=f0e8d8';
-  }
-  P('pg-cert');
-}
-
-function printCert(){
-  var doc=document.getElementById('cert-doc');
-  if(!doc)return;
-  var w=window.open('','_blank');
-  w.document.write('<html><head><title>BSMLH Patent</title><style>body{margin:0;padding:16px;background:#c8b89a}</style></head><body>');
-
-w.document.write(doc.outerHTML);
-w.document.write(’</body></html>’);
-w.document.close();
-setTimeout(function(){w.print();},400);
+  T('🏆 Сертификат L3 готов!');
 }
 
 // ═══ QR СКАНЕР ═══
-function startQRScan(){T(‘📷 QR сканер — скоро’);}
-function stopQRScan(){T(‘QR сканер остановлен’);}
+function startQRScan(){T('📷 QR сканер — скоро');}
+function stopQRScan(){T('QR сканер остановлен');}
 
 // ═══ HUMANITY FUND ═══
 function doFund(msg){
-T(msg);
-U.qrnc=Math.round((U.qrnc+5)*100)/100;
-upd();
-var h=el(‘hist-list’);
-if(h){
-var d=document.createElement(‘div’);
-d.className=‘hist-row’;
-d.innerHTML=’<span>’+msg+’</span><span style="color:var(--green);font-weight:600">+5 QRNC</span>’;
-h.prepend(d);
-}
+  T(msg);
+  U.qrnc=Math.round((U.qrnc+5)*100)/100;
+  upd();
+  var h=el('hist-list');
+  if(h){
+    var d=document.createElement('div');
+    d.className='hist-row';
+    d.innerHTML='<span>'+msg+'</span><span style="color:var(--green);font-weight:600">+5 QRNC</span>';
+    h.prepend(d);
+  }
 }
 
 // ═══ ТЁМНАЯ ТЕМА ═══
 function tDark(){
-U.dark=!U.dark;
-el(‘app’).className=U.dark?‘dark’:’’;
-el(‘app’).style.display=‘flex’;
-setText(‘dark-val’,U.dark?‘Вкл’:‘Выкл’);
+  U.dark=!U.dark;
+  el('app').className=U.dark?'dark':'';
+  el('app').style.display='flex';
+  setText('dark-val',U.dark?'Вкл':'Выкл');
 }
 
 // ═══ ОБНОВЛЕНИЕ UI ═══
 function upd(){
-setText(‘m-qrt’,U.qrt.toFixed(2));
-setText(‘m-qrnc’,U.qrnc);
-setText(‘w-qrt’,U.qrt.toFixed(2));
-setText(‘w-qrnc’,U.qrnc);
-setText(‘c-mini’,U.qrt.toFixed(2)+’ QRT’);
-var bar=el(‘qrnc-bar’);if(bar)bar.style.width=Math.min(U.qrnc,100)+’%’;
-var tier=U.qrnc>=100?‘💎 VIP’:U.qrnc>=50?‘👑 Основатель’:U.qrnc>=30?‘🧬 Верифицирован’:U.qrnc>=20?‘⭐ Легенда’:U.qrnc>=10?‘🟣 Доверенный’:U.qrnc>=5?‘🔵 Надёжный’:U.qrnc>=2?‘🟢 Активный’:‘⚪ Новый’;
-setText(‘m-tier’,tier);
+  setText('m-qrt',U.qrt.toFixed(2));
+  setText('m-qrnc',U.qrnc);
+  setText('w-qrt',U.qrt.toFixed(2));
+  setText('w-qrnc',U.qrnc);
+  setText('c-mini',U.qrt.toFixed(2)+' QRT');
+  var bar=el('qrnc-bar');if(bar)bar.style.width=Math.min(U.qrnc,100)+'%';
+  var tier=U.qrnc>=100?'💎 VIP':U.qrnc>=50?'👑 Основатель':U.qrnc>=30?'🧬 Верифицирован':U.qrnc>=20?'⭐ Легенда':U.qrnc>=10?'🟣 Доверенный':U.qrnc>=5?'🔵 Надёжный':U.qrnc>=2?'🟢 Активный':'⚪ Новый';
+  setText('m-tier',tier);
 }
 
 // ═══ МЕДИАФАЙЛЫ ═══
 function handleMedia(input){
-var file=input.files[0];
-if(!file) return;
-setText(‘media-name’,file.name);
-setText(‘media-size’,(file.size/1024).toFixed(1)+’ KB’);
-setText(‘media-date’,new Date().toLocaleString(‘ru’));
-var reader=new FileReader();
-reader.onload=function(e){
-crypto.subtle.digest(‘SHA-256’,e.target.result).then(function(buf){
-var arr=Array.from(new Uint8Array(buf));
-var hex=arr.map(function(b){return b.toString(16).padStart(2,‘0’);}).join(’’);
-var h=el(‘media-hash’);
-if(h) h.innerText=’SHA-256: ’+hex;
-var r=el(‘media-result’);if(r) r.style.display=‘block’;
-var d=el(‘media-drop’);if(d) d.style.borderColor=‘var(–green)’;
-});
-};
-reader.readAsArrayBuffer(file);
+  var file=input.files[0];
+  if(!file) return;
+  setText('media-name',file.name);
+  setText('media-size',(file.size/1024).toFixed(1)+' KB');
+  setText('media-date',new Date().toLocaleString('ru'));
+  var reader=new FileReader();
+  reader.onload=function(e){
+    crypto.subtle.digest('SHA-256',e.target.result).then(function(buf){
+      var arr=Array.from(new Uint8Array(buf));
+      var hex=arr.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      var h=el('media-hash');
+      if(h) h.innerText='SHA-256: '+hex;
+      var r=el('media-result');if(r) r.style.display='block';
+      var d=el('media-drop');if(d) d.style.borderColor='var(--green)';
+    });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 function saveMediaFix(){
-var name=el(‘media-name’).innerText;
-var hash=el(‘media-hash’).innerText;
-var date=el(‘media-date’).innerText;
-var div=document.createElement(‘div’);
-div.className=‘form-card’;
-div.innerHTML=’<div style="display:flex;gap:10px;align-items:flex-start">’
-+’<div style="font-size:28px">🎬</div>’
-+’<div><div style="font-size:13px;font-weight:700;color:#000">’+name+’</div>’
-+’<div style="font-size:11px;color:#888;margin-top:2px">’+date+’</div>’
-+’<div style="font-size:9px;color:#aaa;font-family:monospace;word-break:break-all;margin-top:4px;background:#f5f5f5;padding:6px;border-radius:6px">’+hash.slice(0,50)+’…</div>’
-+’</div></div>’;
-var ml=el(‘media-list’);if(ml) ml.prepend(div);
-var r=el(‘media-result’);if(r) r.style.display=‘none’;
-var d=el(‘media-drop’);if(d) d.style.borderColor=‘rgba(0,0,0,0.1)’;
-var mi=el(‘media-input’);if(mi) mi.value=’’;
-U.qrt=Math.round((U.qrt+0.01)*100)/100;
-upd();
-T(‘✅ Сертификат сохранён!’);
+  var name=el('media-name').innerText;
+  var hash=el('media-hash').innerText;
+  var date=el('media-date').innerText;
+  var div=document.createElement('div');
+  div.className='form-card';
+  div.innerHTML='<div style="display:flex;gap:10px;align-items:flex-start">'
+    +'<div style="font-size:28px">🎬</div>'
+    +'<div><div style="font-size:13px;font-weight:700;color:#000">'+name+'</div>'
+    +'<div style="font-size:11px;color:#888;margin-top:2px">'+date+'</div>'
+    +'<div style="font-size:9px;color:#aaa;font-family:monospace;word-break:break-all;margin-top:4px;background:#f5f5f5;padding:6px;border-radius:6px">'+hash.slice(0,50)+'...</div>'
+    +'</div></div>';
+  var ml=el('media-list');if(ml) ml.prepend(div);
+  var r=el('media-result');if(r) r.style.display='none';
+  var d=el('media-drop');if(d) d.style.borderColor='rgba(0,0,0,0.1)';
+  var mi=el('media-input');if(mi) mi.value='';
+  U.qrt=Math.round((U.qrt+0.01)*100)/100;
+  upd();
+  T('✅ Сертификат сохранён!');
 }
 
 // ═══ БИРЖА ТРУДА ═══
 function jobsTab(tab){
-el(‘jobs-panel-find’).style.display=tab===‘find’?‘block’:‘none’;
-el(‘jobs-panel-hire’).style.display=tab===‘hire’?‘block’:‘none’;
-el(‘jt-find’).className=‘jobs-tab’+(tab===‘find’?’ on’:’’);
-el(‘jt-hire’).className=‘jobs-tab’+(tab===‘hire’?’ on’:’’);
+  el('jobs-panel-find').style.display=tab==='find'?'block':'none';
+  el('jobs-panel-hire').style.display=tab==='hire'?'block':'none';
+  el('jt-find').className='jobs-tab'+(tab==='find'?' on':'');
+  el('jt-hire').className='jobs-tab'+(tab==='hire'?' on':'');
 }
 
 function addJobSeeker(){
-var name=el(‘job-name’).value.trim();
-var spec=el(‘job-spec’).value.trim();
-var city=el(‘job-city’).value.trim();
-var contact=el(‘job-contact’).value.trim();
-var about=el(‘job-about’).value.trim();
-if(!name||!spec||!city||!contact){T(‘⚠️ Заполните все поля’);return;}
-var colors=[‘var(–gold)’,’#4CAF50’,’#2196F3’,’#9C27B0’,’#FF5722’];
-var color=colors[Math.floor(Math.random()*colors.length)];
-var div=document.createElement(‘div’);
-div.className=‘worker-card’;
-div.innerHTML=’<div class="worker-head"><div class="worker-av" style="background:'+color+'">👤</div>’
-+’<div><div class="worker-name">’+name+’</div>’
-+’<div class="worker-spec" style="color:'+color+'">’+spec+’</div></div></div>’
-+’<div class="worker-meta">📍 ‘+city+’ · 📞 ‘+contact+’</div>’
-+’<div class="worker-about">’+about+’</div>’;
-el(‘jobs-seekers-list’).prepend(div);
-[‘job-name’,‘job-spec’,‘job-city’,‘job-contact’,‘job-about’].forEach(function(id){el(id).value=’’;});
-T(‘✅ Анкета опубликована!’);
+  var name=el('job-name').value.trim();
+  var spec=el('job-spec').value.trim();
+  var city=el('job-city').value.trim();
+  var contact=el('job-contact').value.trim();
+  var about=el('job-about').value.trim();
+  if(!name||!spec||!city||!contact){T('⚠️ Заполните все поля');return;}
+  var colors=['var(--gold)','#4CAF50','#2196F3','#9C27B0','#FF5722'];
+  var color=colors[Math.floor(Math.random()*colors.length)];
+  var div=document.createElement('div');
+  div.className='worker-card';
+  div.innerHTML='<div class="worker-head"><div class="worker-av" style="background:'+color+'">👤</div>'
+    +'<div><div class="worker-name">'+name+'</div>'
+    +'<div class="worker-spec" style="color:'+color+'">'+spec+'</div></div></div>'
+    +'<div class="worker-meta">📍 '+city+' · 📞 '+contact+'</div>'
+    +'<div class="worker-about">'+about+'</div>';
+  el('jobs-seekers-list').prepend(div);
+  ['job-name','job-spec','job-city','job-contact','job-about'].forEach(function(id){el(id).value='';});
+  T('✅ Анкета опубликована!');
 }
 
 function addVacancy(){
-var company=el(‘job-company’).value.trim();
-var pos=el(‘job-position’).value.trim();
-var salary=el(‘job-salary’).value.trim();
-var city=el(‘job-hcity’).value.trim();
-var contact=el(‘job-hcontact’).value.trim();
-if(!company||!pos||!city||!contact){T(‘⚠️ Заполните все поля’);return;}
-var div=document.createElement(‘div’);
-div.className=‘vacancy-card’;
-div.innerHTML=’<div class="vacancy-title">💼 ‘+pos+’</div>’
-+’<div class="vacancy-salary">’+salary+’</div>’
-+’<div class="vacancy-meta">📍 ‘+city+’ · ‘+company+’ · 📞 ‘+contact+’</div>’;
-el(‘jobs-vacancy-list’).prepend(div);
-[‘job-company’,‘job-position’,‘job-salary’,‘job-hcity’,‘job-hcontact’].forEach(function(id){el(id).value=’’;});
-T(‘✅ Вакансия опубликована!’);
+  var company=el('job-company').value.trim();
+  var pos=el('job-position').value.trim();
+  var salary=el('job-salary').value.trim();
+  var city=el('job-hcity').value.trim();
+  var contact=el('job-hcontact').value.trim();
+  if(!company||!pos||!city||!contact){T('⚠️ Заполните все поля');return;}
+  var div=document.createElement('div');
+  div.className='vacancy-card';
+  div.innerHTML='<div class="vacancy-title">💼 '+pos+'</div>'
+    +'<div class="vacancy-salary">'+salary+'</div>'
+    +'<div class="vacancy-meta">📍 '+city+' · '+company+' · 📞 '+contact+'</div>';
+  el('jobs-vacancy-list').prepend(div);
+  ['job-company','job-position','job-salary','job-hcity','job-hcontact'].forEach(function(id){el(id).value='';});
+  T('✅ Вакансия опубликована!');
 }
 
 // ═══ ЧИП В ПРИЛОЖЕНИИ ═══
 async function scanChipInApp(){
-var btn=el(‘chip-scan-btn’);
-var beam=el(‘pat-beam’);
-var st=el(‘patent-chip-status’);
-if(!(‘NDEFReader’ in window)){
-if(st) st.innerText=‘⚠️ NFC не поддерживается’;
-return;
-}
-btn.disabled=true;
-if(beam) beam.style.display=‘block’;
-if(st) st.innerText=‘Поднесите чип…’;
-try{
-var ndef=new NDEFReader();
-await ndef.scan();
-var timeout=setTimeout(function(){
-if(beam) beam.style.display=‘none’;
-btn.disabled=false;
-if(st) st.innerText=‘⚠️ Чип не найден’;
-},5000);
-ndef.onreading=function(){
-clearTimeout(timeout);
-if(beam) beam.style.display=‘none’;
-if(st) st.innerText=‘✅ ЧИП АКТИВЕН’;
-U.hasChip=true;
-setText(‘chip-status-set’,‘Активен’);
-var cs=el(‘chip-status-set’);
-if(cs) cs.className=‘wc-val gr’;
-setText(‘chip-dot’,‘✅’);
-setText(‘chip-info-status’,‘Статус: ✅ Активен’);
-btn.disabled=false;
-T(‘🛡️ BSMLH CHIP активирован!’);
-};
-}catch(e){
-if(beam) beam.style.display=‘none’;
-btn.disabled=false;
-if(st) st.innerText=‘⚠️ Разрешите NFC’;
-}
+  var btn=el('chip-scan-btn');
+  var beam=el('pat-beam');
+  var st=el('patent-chip-status');
+  if(!('NDEFReader' in window)){
+    if(st) st.innerText='⚠️ NFC не поддерживается';
+    return;
+  }
+  btn.disabled=true;
+  if(beam) beam.style.display='block';
+  if(st) st.innerText='Поднесите чип...';
+  try{
+    var ndef=new NDEFReader();
+    await ndef.scan();
+    var timeout=setTimeout(function(){
+      if(beam) beam.style.display='none';
+      btn.disabled=false;
+      if(st) st.innerText='⚠️ Чип не найден';
+    },5000);
+    ndef.onreading=function(){
+      clearTimeout(timeout);
+      if(beam) beam.style.display='none';
+      if(st) st.innerText='✅ ЧИП АКТИВЕН';
+      U.hasChip=true;
+      setText('chip-status-set','Активен');
+      var cs=el('chip-status-set');
+      if(cs) cs.className='wc-val gr';
+      setText('chip-dot','✅');
+      setText('chip-info-status','Статус: ✅ Активен');
+      btn.disabled=false;
+      T('🛡️ BSMLH CHIP активирован!');
+    };
+  }catch(e){
+    if(beam) beam.style.display='none';
+    btn.disabled=false;
+    if(st) st.innerText='⚠️ Разрешите NFC';
+  }
 }
 
 // ═══ ЗАКРЫТИЕ МЕНЮ ═══
-document.addEventListener(‘click’,function(e){
-if(!e.target.closest(’.globe-btn’)) {
-var m=el(‘l-menu’);
-if(m) m.classList.remove(‘open’);
-}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.globe-btn')) {
+    var m=el('l-menu');
+    if(m) m.classList.remove('open');
+  }
 });
-
-(function(){
-setTimeout(function(){
-var s=document.getElementById(‘splash’);
-if(s){s.style.opacity=‘0’;s.style.pointerEvents=‘none’;}
-setTimeout(function(){
-var s=document.getElementById(‘splash’);
-if(s)s.style.display=‘none’;
-},500);
-},2500);
-})();
-
 </script>
+
 </body>
 </html>
