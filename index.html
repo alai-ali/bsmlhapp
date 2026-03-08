@@ -31,9 +31,9 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 /* ═══ SPLASH ═══ */
 #splash{position:fixed;inset:0;z-index:10000;background:#050508;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
 #splash.gone{opacity:0;visibility:hidden}
-.sp-logo{font-family:var(–display);font-size:54px;font-weight:900;color:var(–neon);letter-spacing:6px;text-shadow:0 0 40px rgba(0,242,255,.7),0 0 80px rgba(0,242,255,.3);animation:spIn .8s cubic-bezier(.34,1.56,.64,1) both}
+.sp-logo{font-family:var(–display);font-size:54px;font-weight:900;color:var(–neon);letter-spacing:6px;text-shadow:0 0 40px rgba(0,242,255,.7),0 0 80px rgba(0,242,255,.3);animation:spIn .8s cubic-bezier(.34,1.56,.64,1) both;text-align:center}
 @keyframes spIn{from{opacity:0;transform:scale(.4) translateY(20px)}to{opacity:1;transform:scale(1)}}
-.sp-sub{font-size:9px;color:var(–text2);letter-spacing:4px;margin-top:12px;text-transform:uppercase;animation:fadeUp .5s ease both .4s;opacity:0}
+.sp-sub{font-size:9px;color:var(–text2);letter-spacing:4px;margin-top:12px;text-transform:uppercase;animation:fadeUp .5s ease both .4s;opacity:0;text-align:center;width:100%;padding:0 20px}
 .sp-track{width:200px;height:2px;background:rgba(0,242,255,.1);border-radius:2px;margin-top:28px;overflow:hidden;animation:fadeUp .4s ease both .6s;opacity:0}
 .sp-fill{height:100%;background:linear-gradient(90deg,var(–neon),var(–gold));border-radius:2px;width:0;animation:spLoad 2.2s ease both .8s;box-shadow:0 0 12px var(–neon)}
 @keyframes spLoad{to{width:100%}}
@@ -1286,8 +1286,17 @@ var _tt=null;
 // ── SPLASH ──
 (function(){
   var msgs=['LOADING CORE...','BIOMETRIC READY...','NFC ONLINE...','SYSTEM SECURE'],i=0;
-  var iv=setInterval(function(){i++;var e=document.getElementById('sp-st');if(e&&i<msgs.length)e.innerText=msgs[i];},700);
-  setTimeout(function(){clearInterval(iv);var s=document.getElementById('splash');if(s)s.classList.add('gone');},3400);
+  var iv=setInterval(function(){
+    i++;
+    try{var e=document.getElementById('sp-st');if(e&&i<msgs.length)e.innerText=msgs[i];}catch(ex){}
+  },600);
+  setTimeout(function(){
+    try{clearInterval(iv);}catch(ex){}
+    try{
+      var s=document.getElementById('splash');
+      if(s){s.style.opacity='0';s.style.visibility='hidden';}
+    }catch(ex){}
+  },2800);
 })();
 
 // ── UTILS ──
