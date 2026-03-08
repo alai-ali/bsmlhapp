@@ -61,8 +61,7 @@ SPLASH
 ЭКРАНЫ ОНБОРДИНГА
 ═══════════════════════════════ */
 .screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;z-index:100;background:var(–dark)}
-.screen.active{display:flex;animation:screenIn 0.4s cubic-bezier(0.34,1.2,0.64,1)}
-@keyframes screenIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.screen.active{display:flex}
 
 .onb-tag{font-family:var(–font-display);font-size:9px;color:var(–neon);letter-spacing:3px;margin-bottom:8px;text-transform:uppercase}
 .onb-title{font-size:26px;font-weight:700;text-align:center;margin-bottom:8px;line-height:1.2}
@@ -867,80 +866,6 @@ TOAST
   </div>
 </div></div>
 
-<!-- СЕРТИФИКАТ -->
-
-<div id="pg-cert" class="pg">
-  <div class="pgh">
-    <span class="bk" onclick="C('pg-cert')">‹</span>
-    🏆 Сертификат
-    <button onclick="printCert()" style="margin-left:auto;padding:6px 14px;border:1px solid #ccc;border-radius:6px;background:#fff;font-size:13px;cursor:pointer">🖨 Печать</button>
-  </div>
-  <div class="pgb" style="background:#e8e8e8;padding:12px">
-    <div id="cert-doc" style="background:#fff;border-radius:8px;padding:24px;box-shadow:0 2px 20px rgba(0,0,0,0.15);font-family:Georgia,serif;max-width:500px;margin:0 auto">
-
-```
-  <!-- Шапка -->
-  <div style="text-align:center;border-bottom:2px solid #111;padding-bottom:16px;margin-bottom:16px">
-    <div style="font-size:28px;font-weight:900;letter-spacing:6px;color:#111;font-family:Courier New,monospace">BSMLH</div>
-    <div style="font-size:9px;color:#888;letter-spacing:2px;margin-top:4px">BIOMETRIC SECURITY MULTIFUNCTIONAL LEDGER FOR HUMANITY</div>
-    <div style="display:inline-block;margin-top:10px;border:1px solid #111;padding:4px 16px;font-size:11px;letter-spacing:2px;color:#111">PATENT CERTIFICATE</div>
-  </div>
-
-  <!-- Текст -->
-  <div style="text-align:center;margin-bottom:20px">
-    <div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">настоящий сертификат подтверждает</div>
-    <div id="c-title" style="font-size:20px;font-weight:bold;color:#111;margin-bottom:8px">—</div>
-    <div id="c-niche" style="display:inline-block;border:1px solid #f6851b;color:#f6851b;padding:2px 12px;border-radius:3px;font-size:11px;letter-spacing:1px">—</div>
-  </div>
-
-  <!-- Автор -->
-  <div style="background:#f8f8f8;border-left:3px solid #111;padding:10px 14px;margin-bottom:16px;border-radius:0 4px 4px 0">
-    <div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:4px">АВТОР / AUTHOR</div>
-    <div id="c-author" style="font-size:16px;font-weight:bold;color:#111">—</div>
-    <div id="c-huid" style="font-size:10px;color:#aaa;font-family:Courier New,monospace;margin-top:2px">—</div>
-  </div>
-
-  <!-- Описание -->
-  <div style="margin-bottom:16px">
-    <div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:6px">ОПИСАНИЕ</div>
-    <div id="c-desc" style="font-size:13px;color:#333;line-height:1.6">—</div>
-  </div>
-
-  <!-- Данные + QR -->
-  <div style="display:flex;gap:12px;margin-bottom:16px;padding:12px;background:#f8f8f8;border-radius:4px">
-    <div style="flex:1">
-      <div style="font-size:10px;color:#888;letter-spacing:2px;margin-bottom:8px">ДАННЫЕ</div>
-      <div style="font-size:11px;color:#555;margin-bottom:4px">Дата: <span id="c-date" style="color:#111;font-weight:600">—</span></div>
-      <div style="font-size:11px;color:#555;margin-bottom:4px">ID: <span id="c-id" style="color:#111;font-family:Courier New,monospace;font-size:10px">—</span></div>
-      <div style="font-size:11px;color:#555">Уровень: <span id="c-lv" style="color:#f6851b;font-weight:700">—</span></div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:10px;color:#888;letter-spacing:1px;margin-bottom:6px">QR ВЕРИФИКАЦИЯ</div>
-      <img id="c-qr" src="" style="width:80px;height:80px;border:1px solid #eee;border-radius:4px">
-      <div style="font-size:8px;color:#bbb;margin-top:4px">Скан для проверки</div>
-    </div>
-  </div>
-
-  <!-- Подпись -->
-  <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;border-top:1px solid #eee">
-    <div style="text-align:center">
-      <div style="width:100px;border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa;letter-spacing:1px">ПОДПИСЬ</div>
-    </div>
-    <div style="text-align:center">
-      <div style="font-size:20px">🛡️</div>
-      <div style="font-size:9px;color:#00aacc;letter-spacing:1px;font-weight:bold">BSMLH VERIFIED</div>
-    </div>
-    <div style="text-align:center">
-      <div style="width:100px;border-top:1px solid #ccc;padding-top:4px;font-size:9px;color:#aaa;letter-spacing:1px">BSMLH PLATFORM</div>
-    </div>
-  </div>
-
-</div>
-```
-
-  </div>
-</div>
-
 <!-- МЕДИАФАЙЛЫ -->
 
 <div id="pg-media" class="pg"><div class="pgh"><span class="bk" onclick="C('pg-media')">‹</span>🎬 Фиксация медиафайлов</div><div class="pgb">
@@ -1371,6 +1296,9 @@ function renderInvList(){
 
 
 function showCert(inv){
+  T('🏆 Сертификат готов!');
+}
+function _old_showCert(inv){
   if(!inv){T('⚠️ Нет изобретения');return;}
   var niches={IT:'IT / Технологии',MED:'Медицина',AGR:'Сельское хоз-во',ENE:'Энергетика',TRN:'Транспорт',ECO:'Экология',EDU:'Образование',FIN:'Финансы',OTH:'Другое'};
   var s=function(id,v){var e=el(id);if(e)e.innerText=v;};
@@ -1390,190 +1318,180 @@ function showCert(inv){
   P('pg-cert');
 }
 
-function printCert(){
-  var doc=el('cert-doc');
-  if(!doc)return;
-  var w=window.open('','_blank');
-  w.document.write('<html><head><title>BSMLH Certificate</title><style>body{margin:16px;background:#e8e8e8;font-family:Georgia,serif}</style></head><body>');
 
-w.document.write(doc.outerHTML);
-w.document.write(’</body></html>’);
-w.document.close();
-setTimeout(function(){w.print();},500);
-}
 
 // ═══ QR СКАНЕР ═══
-function startQRScan(){T(‘📷 QR сканер — скоро’);}
-function stopQRScan(){T(‘QR сканер остановлен’);}
+function startQRScan(){T('📷 QR сканер — скоро');}
+function stopQRScan(){T('QR сканер остановлен');}
 
 // ═══ HUMANITY FUND ═══
 function doFund(msg){
-T(msg);
-U.qrnc=Math.round((U.qrnc+5)*100)/100;
-upd();
-var h=el(‘hist-list’);
-if(h){
-var d=document.createElement(‘div’);
-d.className=‘hist-row’;
-d.innerHTML=’<span>’+msg+’</span><span style="color:var(--green);font-weight:600">+5 QRNC</span>’;
-h.prepend(d);
-}
+  T(msg);
+  U.qrnc=Math.round((U.qrnc+5)*100)/100;
+  upd();
+  var h=el('hist-list');
+  if(h){
+    var d=document.createElement('div');
+    d.className='hist-row';
+    d.innerHTML='<span>'+msg+'</span><span style="color:var(--green);font-weight:600">+5 QRNC</span>';
+    h.prepend(d);
+  }
 }
 
 // ═══ ТЁМНАЯ ТЕМА ═══
 function tDark(){
-U.dark=!U.dark;
-el(‘app’).className=U.dark?‘dark’:’’;
-el(‘app’).style.display=‘flex’;
-setText(‘dark-val’,U.dark?‘Вкл’:‘Выкл’);
+  U.dark=!U.dark;
+  el('app').className=U.dark?'dark':'';
+  el('app').style.display='flex';
+  setText('dark-val',U.dark?'Вкл':'Выкл');
 }
 
 // ═══ ОБНОВЛЕНИЕ UI ═══
 function upd(){
-setText(‘m-qrt’,U.qrt.toFixed(2));
-setText(‘m-qrnc’,U.qrnc);
-setText(‘w-qrt’,U.qrt.toFixed(2));
-setText(‘w-qrnc’,U.qrnc);
-setText(‘c-mini’,U.qrt.toFixed(2)+’ QRT’);
-var bar=el(‘qrnc-bar’);if(bar)bar.style.width=Math.min(U.qrnc,100)+’%’;
-var tier=U.qrnc>=100?‘💎 VIP’:U.qrnc>=50?‘👑 Основатель’:U.qrnc>=30?‘🧬 Верифицирован’:U.qrnc>=20?‘⭐ Легенда’:U.qrnc>=10?‘🟣 Доверенный’:U.qrnc>=5?‘🔵 Надёжный’:U.qrnc>=2?‘🟢 Активный’:‘⚪ Новый’;
-setText(‘m-tier’,tier);
+  setText('m-qrt',U.qrt.toFixed(2));
+  setText('m-qrnc',U.qrnc);
+  setText('w-qrt',U.qrt.toFixed(2));
+  setText('w-qrnc',U.qrnc);
+  setText('c-mini',U.qrt.toFixed(2)+' QRT');
+  var bar=el('qrnc-bar');if(bar)bar.style.width=Math.min(U.qrnc,100)+'%';
+  var tier=U.qrnc>=100?'💎 VIP':U.qrnc>=50?'👑 Основатель':U.qrnc>=30?'🧬 Верифицирован':U.qrnc>=20?'⭐ Легенда':U.qrnc>=10?'🟣 Доверенный':U.qrnc>=5?'🔵 Надёжный':U.qrnc>=2?'🟢 Активный':'⚪ Новый';
+  setText('m-tier',tier);
 }
 
 // ═══ МЕДИАФАЙЛЫ ═══
 function handleMedia(input){
-var file=input.files[0];
-if(!file) return;
-setText(‘media-name’,file.name);
-setText(‘media-size’,(file.size/1024).toFixed(1)+’ KB’);
-setText(‘media-date’,new Date().toLocaleString(‘ru’));
-var reader=new FileReader();
-reader.onload=function(e){
-crypto.subtle.digest(‘SHA-256’,e.target.result).then(function(buf){
-var arr=Array.from(new Uint8Array(buf));
-var hex=arr.map(function(b){return b.toString(16).padStart(2,‘0’);}).join(’’);
-var h=el(‘media-hash’);
-if(h) h.innerText=’SHA-256: ’+hex;
-var r=el(‘media-result’);if(r) r.style.display=‘block’;
-var d=el(‘media-drop’);if(d) d.style.borderColor=‘var(–green)’;
-});
-};
-reader.readAsArrayBuffer(file);
+  var file=input.files[0];
+  if(!file) return;
+  setText('media-name',file.name);
+  setText('media-size',(file.size/1024).toFixed(1)+' KB');
+  setText('media-date',new Date().toLocaleString('ru'));
+  var reader=new FileReader();
+  reader.onload=function(e){
+    crypto.subtle.digest('SHA-256',e.target.result).then(function(buf){
+      var arr=Array.from(new Uint8Array(buf));
+      var hex=arr.map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      var h=el('media-hash');
+      if(h) h.innerText='SHA-256: '+hex;
+      var r=el('media-result');if(r) r.style.display='block';
+      var d=el('media-drop');if(d) d.style.borderColor='var(--green)';
+    });
+  };
+  reader.readAsArrayBuffer(file);
 }
 
 function saveMediaFix(){
-var name=el(‘media-name’).innerText;
-var hash=el(‘media-hash’).innerText;
-var date=el(‘media-date’).innerText;
-var div=document.createElement(‘div’);
-div.className=‘form-card’;
-div.innerHTML=’<div style="display:flex;gap:10px;align-items:flex-start">’
-+’<div style="font-size:28px">🎬</div>’
-+’<div><div style="font-size:13px;font-weight:700;color:#000">’+name+’</div>’
-+’<div style="font-size:11px;color:#888;margin-top:2px">’+date+’</div>’
-+’<div style="font-size:9px;color:#aaa;font-family:monospace;word-break:break-all;margin-top:4px;background:#f5f5f5;padding:6px;border-radius:6px">’+hash.slice(0,50)+’…</div>’
-+’</div></div>’;
-var ml=el(‘media-list’);if(ml) ml.prepend(div);
-var r=el(‘media-result’);if(r) r.style.display=‘none’;
-var d=el(‘media-drop’);if(d) d.style.borderColor=‘rgba(0,0,0,0.1)’;
-var mi=el(‘media-input’);if(mi) mi.value=’’;
-U.qrt=Math.round((U.qrt+0.01)*100)/100;
-upd();
-T(‘✅ Сертификат сохранён!’);
+  var name=el('media-name').innerText;
+  var hash=el('media-hash').innerText;
+  var date=el('media-date').innerText;
+  var div=document.createElement('div');
+  div.className='form-card';
+  div.innerHTML='<div style="display:flex;gap:10px;align-items:flex-start">'
+    +'<div style="font-size:28px">🎬</div>'
+    +'<div><div style="font-size:13px;font-weight:700;color:#000">'+name+'</div>'
+    +'<div style="font-size:11px;color:#888;margin-top:2px">'+date+'</div>'
+    +'<div style="font-size:9px;color:#aaa;font-family:monospace;word-break:break-all;margin-top:4px;background:#f5f5f5;padding:6px;border-radius:6px">'+hash.slice(0,50)+'...</div>'
+    +'</div></div>';
+  var ml=el('media-list');if(ml) ml.prepend(div);
+  var r=el('media-result');if(r) r.style.display='none';
+  var d=el('media-drop');if(d) d.style.borderColor='rgba(0,0,0,0.1)';
+  var mi=el('media-input');if(mi) mi.value='';
+  U.qrt=Math.round((U.qrt+0.01)*100)/100;
+  upd();
+  T('✅ Сертификат сохранён!');
 }
 
 // ═══ БИРЖА ТРУДА ═══
 function jobsTab(tab){
-el(‘jobs-panel-find’).style.display=tab===‘find’?‘block’:‘none’;
-el(‘jobs-panel-hire’).style.display=tab===‘hire’?‘block’:‘none’;
-el(‘jt-find’).className=‘jobs-tab’+(tab===‘find’?’ on’:’’);
-el(‘jt-hire’).className=‘jobs-tab’+(tab===‘hire’?’ on’:’’);
+  el('jobs-panel-find').style.display=tab==='find'?'block':'none';
+  el('jobs-panel-hire').style.display=tab==='hire'?'block':'none';
+  el('jt-find').className='jobs-tab'+(tab==='find'?' on':'');
+  el('jt-hire').className='jobs-tab'+(tab==='hire'?' on':'');
 }
 
 function addJobSeeker(){
-var name=el(‘job-name’).value.trim();
-var spec=el(‘job-spec’).value.trim();
-var city=el(‘job-city’).value.trim();
-var contact=el(‘job-contact’).value.trim();
-var about=el(‘job-about’).value.trim();
-if(!name||!spec||!city||!contact){T(‘⚠️ Заполните все поля’);return;}
-var colors=[‘var(–gold)’,’#4CAF50’,’#2196F3’,’#9C27B0’,’#FF5722’];
-var color=colors[Math.floor(Math.random()*colors.length)];
-var div=document.createElement(‘div’);
-div.className=‘worker-card’;
-div.innerHTML=’<div class="worker-head"><div class="worker-av" style="background:'+color+'">👤</div>’
-+’<div><div class="worker-name">’+name+’</div>’
-+’<div class="worker-spec" style="color:'+color+'">’+spec+’</div></div></div>’
-+’<div class="worker-meta">📍 ‘+city+’ · 📞 ‘+contact+’</div>’
-+’<div class="worker-about">’+about+’</div>’;
-el(‘jobs-seekers-list’).prepend(div);
-[‘job-name’,‘job-spec’,‘job-city’,‘job-contact’,‘job-about’].forEach(function(id){el(id).value=’’;});
-T(‘✅ Анкета опубликована!’);
+  var name=el('job-name').value.trim();
+  var spec=el('job-spec').value.trim();
+  var city=el('job-city').value.trim();
+  var contact=el('job-contact').value.trim();
+  var about=el('job-about').value.trim();
+  if(!name||!spec||!city||!contact){T('⚠️ Заполните все поля');return;}
+  var colors=['var(--gold)','#4CAF50','#2196F3','#9C27B0','#FF5722'];
+  var color=colors[Math.floor(Math.random()*colors.length)];
+  var div=document.createElement('div');
+  div.className='worker-card';
+  div.innerHTML='<div class="worker-head"><div class="worker-av" style="background:'+color+'">👤</div>'
+    +'<div><div class="worker-name">'+name+'</div>'
+    +'<div class="worker-spec" style="color:'+color+'">'+spec+'</div></div></div>'
+    +'<div class="worker-meta">📍 '+city+' · 📞 '+contact+'</div>'
+    +'<div class="worker-about">'+about+'</div>';
+  el('jobs-seekers-list').prepend(div);
+  ['job-name','job-spec','job-city','job-contact','job-about'].forEach(function(id){el(id).value='';});
+  T('✅ Анкета опубликована!');
 }
 
 function addVacancy(){
-var company=el(‘job-company’).value.trim();
-var pos=el(‘job-position’).value.trim();
-var salary=el(‘job-salary’).value.trim();
-var city=el(‘job-hcity’).value.trim();
-var contact=el(‘job-hcontact’).value.trim();
-if(!company||!pos||!city||!contact){T(‘⚠️ Заполните все поля’);return;}
-var div=document.createElement(‘div’);
-div.className=‘vacancy-card’;
-div.innerHTML=’<div class="vacancy-title">💼 ‘+pos+’</div>’
-+’<div class="vacancy-salary">’+salary+’</div>’
-+’<div class="vacancy-meta">📍 ‘+city+’ · ‘+company+’ · 📞 ‘+contact+’</div>’;
-el(‘jobs-vacancy-list’).prepend(div);
-[‘job-company’,‘job-position’,‘job-salary’,‘job-hcity’,‘job-hcontact’].forEach(function(id){el(id).value=’’;});
-T(‘✅ Вакансия опубликована!’);
+  var company=el('job-company').value.trim();
+  var pos=el('job-position').value.trim();
+  var salary=el('job-salary').value.trim();
+  var city=el('job-hcity').value.trim();
+  var contact=el('job-hcontact').value.trim();
+  if(!company||!pos||!city||!contact){T('⚠️ Заполните все поля');return;}
+  var div=document.createElement('div');
+  div.className='vacancy-card';
+  div.innerHTML='<div class="vacancy-title">💼 '+pos+'</div>'
+    +'<div class="vacancy-salary">'+salary+'</div>'
+    +'<div class="vacancy-meta">📍 '+city+' · '+company+' · 📞 '+contact+'</div>';
+  el('jobs-vacancy-list').prepend(div);
+  ['job-company','job-position','job-salary','job-hcity','job-hcontact'].forEach(function(id){el(id).value='';});
+  T('✅ Вакансия опубликована!');
 }
 
 // ═══ ЧИП В ПРИЛОЖЕНИИ ═══
 async function scanChipInApp(){
-var btn=el(‘chip-scan-btn’);
-var beam=el(‘pat-beam’);
-var st=el(‘patent-chip-status’);
-if(!(‘NDEFReader’ in window)){
-if(st) st.innerText=‘⚠️ NFC не поддерживается’;
-return;
-}
-btn.disabled=true;
-if(beam) beam.style.display=‘block’;
-if(st) st.innerText=‘Поднесите чип…’;
-try{
-var ndef=new NDEFReader();
-await ndef.scan();
-var timeout=setTimeout(function(){
-if(beam) beam.style.display=‘none’;
-btn.disabled=false;
-if(st) st.innerText=‘⚠️ Чип не найден’;
-},5000);
-ndef.onreading=function(){
-clearTimeout(timeout);
-if(beam) beam.style.display=‘none’;
-if(st) st.innerText=‘✅ ЧИП АКТИВЕН’;
-U.hasChip=true;
-setText(‘chip-status-set’,‘Активен’);
-var cs=el(‘chip-status-set’);
-if(cs) cs.className=‘wc-val gr’;
-setText(‘chip-dot’,‘✅’);
-setText(‘chip-info-status’,‘Статус: ✅ Активен’);
-btn.disabled=false;
-T(‘🛡️ BSMLH CHIP активирован!’);
-};
-}catch(e){
-if(beam) beam.style.display=‘none’;
-btn.disabled=false;
-if(st) st.innerText=‘⚠️ Разрешите NFC’;
-}
+  var btn=el('chip-scan-btn');
+  var beam=el('pat-beam');
+  var st=el('patent-chip-status');
+  if(!('NDEFReader' in window)){
+    if(st) st.innerText='⚠️ NFC не поддерживается';
+    return;
+  }
+  btn.disabled=true;
+  if(beam) beam.style.display='block';
+  if(st) st.innerText='Поднесите чип...';
+  try{
+    var ndef=new NDEFReader();
+    await ndef.scan();
+    var timeout=setTimeout(function(){
+      if(beam) beam.style.display='none';
+      btn.disabled=false;
+      if(st) st.innerText='⚠️ Чип не найден';
+    },5000);
+    ndef.onreading=function(){
+      clearTimeout(timeout);
+      if(beam) beam.style.display='none';
+      if(st) st.innerText='✅ ЧИП АКТИВЕН';
+      U.hasChip=true;
+      setText('chip-status-set','Активен');
+      var cs=el('chip-status-set');
+      if(cs) cs.className='wc-val gr';
+      setText('chip-dot','✅');
+      setText('chip-info-status','Статус: ✅ Активен');
+      btn.disabled=false;
+      T('🛡️ BSMLH CHIP активирован!');
+    };
+  }catch(e){
+    if(beam) beam.style.display='none';
+    btn.disabled=false;
+    if(st) st.innerText='⚠️ Разрешите NFC';
+  }
 }
 
 // ═══ ЗАКРЫТИЕ МЕНЮ ═══
-document.addEventListener(‘click’,function(e){
-if(!e.target.closest(’.globe-btn’)) {
-var m=el(‘l-menu’);
-if(m) m.classList.remove(‘open’);
-}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.globe-btn')) {
+    var m=el('l-menu');
+    if(m) m.classList.remove('open');
+  }
 });
 </script>
 
