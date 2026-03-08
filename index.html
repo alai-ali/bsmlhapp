@@ -487,7 +487,7 @@ TOAST
   <div class="onb-sub">Ваше фото привязывается к HUID-идентификатору</div>
   <video id="video-feed" autoplay playsinline></video>
   <canvas id="photo-canvas" style="display:none"></canvas>
-  <button class="btn-neo" onclick="takePhoto()">📸 СДЕЛАТЬ ФОТО</button>
+  <button class="btn-neo" onclick="handleScan()">📸 СКАНИРОВАНИЕ</button>
   <button class="btn-ghost" onclick="skipCam()">Пропустить</button>
 </div>
 
@@ -1143,18 +1143,28 @@ function startCam(){
   if(!n){T('⚠️ Введите имя');return;}
   U.name=n;
   el('scr-reg').classList.remove('active');
+  el('scr-scan').classList.add('active');
+}
+
+function openCamera(){
   if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-    el('scr-scan').classList.add('active');
-    var ct=setTimeout(function(){
-      el('scr-scan').classList.remove('active');
-      el('scr-chip').classList.add('active');
-    },3000);
     navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}})
-      .then(function(s){clearTimeout(ct);el('video-feed').srcObject=s;})
-      .catch(function(){clearTimeout(ct);el('scr-scan').classList.remove('active');el('scr-chip').classList.add('active');});
+      .then(function(s){el('video-feed').srcObject=s;})
+      .catch(function(){T('⚠️ Нет доступа к камере');});
   } else {
-    el('scr-chip').classList.add('active');
+    T('⚠️ Камера недоступна');
   }
+}
+
+
+function handleScan(){
+  var v=el('video-feed');
+  if(!v.srcObject){
+    openCamera();
+    T('📷 Камера запущена — нажмите ещё раз для фото');
+    return;
+  }
+  takePhoto();
 }
 
 function takePhoto(){
