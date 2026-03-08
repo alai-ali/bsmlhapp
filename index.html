@@ -89,7 +89,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .lang-opt:active{background:rgba(0,242,255,.08);color:var(–neon)}
 
 /* ═══ APP ═══ */
-#app{display:none;flex-direction:column;position:fixed;inset:0;z-index:10;background:var(–bg)}
+#app{display:none;flex-direction:column;position:fixed;inset:0;z-index:1;background:var(–bg)}
 #app.on{display:flex}
 .app-hdr{height:max(54px,calc(44px + var(–safe-top)));padding-top:var(–safe-top);padding:var(–safe-top) 16px 0;display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:8px;background:rgba(5,5,8,.97);border-bottom:1px solid var(–border);flex-shrink:0;position:sticky;top:0;z-index:40}
 .hdr-logo{font-family:var(–display);font-size:14px;font-weight:900;color:var(–neon);letter-spacing:3px;text-shadow:0 0 15px rgba(0,242,255,.5)}
@@ -525,8 +525,12 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(–green);display:inline-block;animation:blink 1.5s infinite;margin-right:5px}
 
 /* Онбординг полностью перекрывает app */
-#app{isolation:isolate}
+#app{display:none;flex-direction:column;position:fixed;inset:0;z-index:1;background:var(–bg)}
 .scr.on{background:var(–bg) !important}
+
+/* Онбординг всегда поверх всего */
+.scr{background:var(–bg) !important}
+#splash{background:var(–bg) !important}
 </style>
 
 </head>
