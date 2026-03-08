@@ -1127,7 +1127,7 @@ async function activateChip(){
       beam.style.display='none';
       setText('chip-status','✅ Чип активирован!');
       U.hasChip=true;
-      setTimeout(showSMS,800);
+      setTimeout(toApp,800);
     };
   }catch(e){
     beam.style.display='none';
