@@ -29,7 +29,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @keyframes ptFly{0%{transform:translateY(100vh);opacity:0}10%{opacity:0.7}90%{opacity:0.3}100%{transform:translateY(-10px);opacity:0}}
 
 /* ═══ SPLASH ═══ */
-#splash{position:fixed;inset:0;z-index:9995;background:var(–bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+#splash{position:fixed;inset:0;z-index:10000;background:var(–bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
 #splash.gone{opacity:0;visibility:hidden}
 .sp-logo{font-family:var(–display);font-size:54px;font-weight:900;color:var(–neon);letter-spacing:6px;text-shadow:0 0 40px rgba(0,242,255,.7),0 0 80px rgba(0,242,255,.3);animation:spIn .8s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes spIn{from{opacity:0;transform:scale(.4) translateY(20px)}to{opacity:1;transform:scale(1)}}
@@ -41,7 +41,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* ═══ ОНБОРДИНГ ═══ */
-.scr{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px max(30px,var(–safe-bot));background:var(–bg);visibility:hidden;opacity:0;transform:translateX(30px);transition:all .4s cubic-bezier(.34,1.1,.64,1)}
+.scr{position:fixed;inset:0;z-index:9500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px max(30px,var(–safe-bot));background:var(–bg);visibility:hidden;opacity:0;transform:translateX(30px);transition:all .4s cubic-bezier(.34,1.1,.64,1)}
 .scr::before,.scr::after{content:’’;position:absolute;width:36px;height:36px;border-color:rgba(0,242,255,.2);border-style:solid}
 .scr::before{top:max(16px,var(–safe-top));left:16px;border-width:1px 0 0 1px}
 .scr::after{bottom:max(16px,var(–safe-bot));right:16px;border-width:0 1px 1px 0}
@@ -89,7 +89,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .lang-opt:active{background:rgba(0,242,255,.08);color:var(–neon)}
 
 /* ═══ APP ═══ */
-#app{display:none;flex-direction:column;position:fixed;inset:0;background:var(–bg)}
+#app{display:none;flex-direction:column;position:fixed;inset:0;z-index:10;background:var(–bg)}
 #app.on{display:flex}
 .app-hdr{height:max(54px,calc(44px + var(–safe-top)));padding-top:var(–safe-top);padding:var(–safe-top) 16px 0;display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:8px;background:rgba(5,5,8,.97);border-bottom:1px solid var(–border);flex-shrink:0;position:sticky;top:0;z-index:40}
 .hdr-logo{font-family:var(–display);font-size:14px;font-weight:900;color:var(–neon);letter-spacing:3px;text-shadow:0 0 15px rgba(0,242,255,.5)}
@@ -523,6 +523,10 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 /* BLINK */
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(–green);display:inline-block;animation:blink 1.5s infinite;margin-right:5px}
+
+/* Онбординг полностью перекрывает app */
+#app{isolation:isolate}
+.scr.on{background:var(–bg) !important}
 </style>
 
 </head>
@@ -1279,7 +1283,7 @@ var _tt=null;
 (function(){
   var msgs=['LOADING CORE...','BIOMETRIC READY...','NFC ONLINE...','SYSTEM SECURE'],i=0;
   var iv=setInterval(function(){i++;var e=document.getElementById('sp-st');if(e&&i<msgs.length)e.innerText=msgs[i];},700);
-  setTimeout(function(){clearInterval(iv);var s=document.getElementById('splash');if(s)s.classList.add('gone');},3000);
+  setTimeout(function(){clearInterval(iv);var s=document.getElementById('splash');if(s)s.classList.add('gone');},3400);
 })();
 
 // ── UTILS ──
