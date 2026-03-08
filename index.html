@@ -1272,15 +1272,28 @@ var _tt=null;
 
 // ── PARTICLES ──
 (function(){
+  var c=document.getElementById('pts');
+  if(!c)return;
+  for(var i=0;i<16;i++){
+    var p=document.createElement('div');p.className='pt';
+    var x=Math.random()*100,dur=8+Math.random()*10,delay=Math.random()*8;
+    var col=i%4===0?'var(--gold)':'var(--neon)';
+    p.style.cssText='left:'+x+'%;width:1px;height:1px;background:'+col+';animation-duration:'+dur+'s;animation-delay:'+delay+'s';
+    c.appendChild(p);
+  }
+})();
+
+// ── SPLASH ──
+(function(){
   var s=document.getElementById('splash');
   var st=document.getElementById('sp-st');
   if(st)st.innerText='LOADING CORE...';
-  setTimeout(function(){if(st)st.innerText='BIOMETRIC READY...';},600);
-  setTimeout(function(){if(st)st.innerText='NFC ONLINE...';},1200);
-  setTimeout(function(){if(st)st.innerText='SYSTEM SECURE';},1800);
+  setTimeout(function(){try{if(st)st.innerText='BIOMETRIC READY...';}catch(e){}},600);
+  setTimeout(function(){try{if(st)st.innerText='NFC ONLINE...';}catch(e){}},1200);
+  setTimeout(function(){try{if(st)st.innerText='SYSTEM SECURE';}catch(e){}},1800);
   setTimeout(function(){
-    if(s){s.style.transition='opacity .5s';s.style.opacity='0';}
-    setTimeout(function(){if(s){s.style.display='none';}},500);
+    try{if(s){s.style.opacity='0';s.style.pointerEvents='none';}}catch(e){}
+    setTimeout(function(){try{if(s)s.style.display='none';}catch(e){}},600);
   },2400);
 })();
 
