@@ -522,6 +522,10 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 .photo-thumb-add{width:72px;height:72px;border-radius:4px;border:1px dashed rgba(0,242,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;background:rgba(0,242,255,.03);transition:all .2s}
 .photo-thumb-add:active{border-color:var(--neon);background:rgba(0,242,255,.08)}
 
+
+/* SCAN BEAM ANIMATION */
+@keyframes scanBeamAnim{0%{top:30%;opacity:0}5%{opacity:1}50%{top:52%;opacity:1}95%{opacity:1}100%{top:30%;opacity:0}}
+
 /* BLINK */
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:blink 1.5s infinite;margin-right:5px}
@@ -562,15 +566,40 @@ select.fi{appearance:none;background-image:url(“data:image/svg+xml,%3Csvg xmln
 
 <!-- STEP 2: CAMERA -->
 
-<div id="s2" class="scr">
-  <div class="steps"><div class="step done"></div><div class="step on"></div><div class="step"></div></div>
-  <div class="onb-tag">STEP 02 // BIOMETRICS</div>
-  <div class="onb-h">БИОМЕТРИЯ</div>
-  <div class="onb-p">Сделайте фото для привязки к вашей цифровой личности</div>
-  <video id="vid" autoplay playsinline></video>
+<div id="s2" class="scr" style="padding:0;background:#000;justify-content:flex-end">
+  <!-- Fullscreen video background -->
+  <video id="vid" autoplay playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)"></video>
   <canvas id="cv" style="display:none"></canvas>
-  <button class="btn" onclick="takePhoto()">📸 СДЕЛАТЬ ФОТО</button>
-  <button class="btn-ghost" onclick="skipCam()">Пропустить →</button>
+
+  <!-- Dark overlay with oval cutout -->
+  <div style="position:absolute;inset:0;pointer-events:none">
+    <svg width="100%" height="100%" style="position:absolute;inset:0;width:100%;height:100%">
+      <defs>
+        <mask id="oval-mask">
+          <rect width="100%" height="100%" fill="white"/>
+          <ellipse cx="50%" cy="42%" rx="38%" ry="28%" fill="black"/>
+        </mask>
+      </defs>
+      <rect width="100%" height="100%" fill="rgba(0,0,0,0.72)" mask="url(#oval-mask)"/>
+      <ellipse cx="50%" cy="42%" rx="38%" ry="28%" fill="none" stroke="#00f2ff" stroke-width="2" opacity="0.9"/>
+      <ellipse cx="50%" cy="42%" rx="39%" ry="29%" fill="none" stroke="rgba(0,242,255,0.25)" stroke-width="8"/>
+    </svg>
+    <!-- Animated scan beam inside oval -->
+    <div id="scan-beam" style="position:absolute;left:12%;width:76%;height:2px;background:linear-gradient(90deg,transparent,#00f2ff,transparent);box-shadow:0 0 12px #00f2ff,0 0 24px rgba(0,242,255,0.4);top:30%;animation:scanBeamAnim 2s ease-in-out infinite"></div>
+  </div>
+
+  <!-- Top label -->
+  <div style="position:absolute;top:max(20px,env(safe-area-inset-top,0px));left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;z-index:5">
+    <div style="font-family:'Orbitron',monospace;font-size:8px;color:#00f2ff;letter-spacing:4px">STEP 02 // BIOMETRICS</div>
+    <div style="font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#fff;letter-spacing:2px">БИОМЕТРИЯ</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5)">Поместите лицо в овал</div>
+  </div>
+
+  <!-- Bottom controls -->
+  <div style="position:relative;z-index:10;width:100%;padding:20px 24px max(36px,env(safe-area-inset-bottom,20px));display:flex;flex-direction:column;align-items:center;gap:14px;background:linear-gradient(transparent,rgba(0,0,0,0.88) 40%)">
+    <button onclick="takePhoto()" style="width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,0.95);border:4px solid #00f2ff;box-shadow:0 0 24px rgba(0,242,255,0.6),0 0 48px rgba(0,242,255,0.2);font-size:30px;cursor:pointer;display:flex;align-items:center;justify-content:center">📸</button>
+    <button onclick="skipCam()" style="background:transparent;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;padding:8px;font-family:'Rajdhani',sans-serif;letter-spacing:1px">Пропустить →</button>
+  </div>
 </div>
 
 <!-- STEP 3: NFC -->
